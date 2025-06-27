@@ -28,7 +28,7 @@ pub mod certify {
         certificate_account.name = name;
         certificate_account.course_id = course_id;
         certificate_account.learner_id = learner_id;
-        certificate_account.issue_date = Clock::get().unwrap().unix_timestamp as u64;
+        certificate_account.issue_date = Clock::get()?.unix_timestamp as u64;
         certificate_account.course_name = course_name;
         certificate_account.issuer = ctx.accounts.org.key();
         
@@ -83,10 +83,10 @@ pub struct IssueCertificate<'info> {
 pub struct Certificate {
     #[max_len(20)]
     pub learner_id: String,
-    #[max_len(50)]
-    pub name: String,
     #[max_len(20)]
     pub course_id: String,
+    #[max_len(50)]
+    pub name: String,
     #[max_len(50)]
     pub course_name: String,
     pub issue_date: u64,

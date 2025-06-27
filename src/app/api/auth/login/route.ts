@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   if (user.role === 'organization' && !user.isApproved) {
     return Response.json({ message: 'Your organization account is not approved yet' }, { status: 403 });
   }
-  const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+  const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
   console.log(user.role, 'user role');
   return Response.json({ token, role: user.role }, { status: 200 });
 }

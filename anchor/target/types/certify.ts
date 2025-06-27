@@ -98,11 +98,11 @@ export type Certify = {
             "type": "string"
           },
           {
-            "name": "name",
+            "name": "courseId",
             "type": "string"
           },
           {
-            "name": "courseId",
+            "name": "name",
             "type": "string"
           },
           {

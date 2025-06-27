@@ -67,6 +67,45 @@ export function useCounterProgram() {
     },
   });
 
+  function useCertificateByCourseIdLearnerId ( courseId: string, learnerId: string){
+    // const paddedLearnerId = learnerId.padEnd(20, '\0');
+    // const paddedCourseId = courseId.padEnd(20, '\0');
+    console.log(learnerId, 'learnerId in useCertificatesByLearner');
+    return useQuery({
+      queryKey: ['certificates', 'learner', { cluster,  courseId, learnerId }],
+      queryFn: async () => {
+        console.log(learnerId, 'learnerId in queryFn');
+        const learnerIdBytes = Buffer.from(learnerId);
+        const courseIdBytes = Buffer.from(courseId);
+        // fetch all certificate accounts where the learnerId matches
+        return program.account.certificate.all(
+          [
+          {
+            memcmp: {
+              offset: 8 , 
+              bytes: bs58.encode(Buffer.concat([
+                Buffer.from([learnerId.length, 0, 0, 0]),
+                learnerIdBytes]
+              )),
+            }
+            
+          },
+          {
+            memcmp: {
+              offset: 8 + 4 + learnerId.length  ,// 4 delimiter to string
+              bytes: bs58.encode(Buffer.concat([
+                Buffer.from([courseId.length, 0, 0, 0]),
+                courseIdBytes]
+              )),
+            }
+            
+          },
+        ]
+      );
+      },
+      enabled: !!learnerId && !!courseId && !!program,
+    });
+  }
   
   // Query to get all certificates by learnerId
   function useCertificatesByLearner(learnerId: string) {
@@ -92,6 +131,8 @@ export function useCounterProgram() {
       enabled: !!learnerId && !!program,
     });
   }
+
+  // const usePublicCertificate = 
 
   // use this to get the certificate account by learnerId inside of the learner profile
   // const getCertficateAccount = useQuery({
@@ -124,6 +165,7 @@ export function useCounterProgram() {
     getProgramAccount,
     createCertificate,
     useCertificatesByLearner,
+    useCertificateByCourseIdLearnerId
   }
 }
 
