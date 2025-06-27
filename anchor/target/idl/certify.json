@@ -1,0 +1,118 @@
+{
+  "address": "8Wsmf8Sb8hvTwRPNJL3VEaLS3gyWey27Lv1PcqmtqFkc",
+  "metadata": {
+    "name": "certify",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "issue_certificate",
+      "discriminator": [
+        61,
+        197,
+        55,
+        28,
+        159,
+        18,
+        132,
+        128
+      ],
+      "accounts": [
+        {
+          "name": "certificate_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "learner_id"
+              },
+              {
+                "kind": "arg",
+                "path": "course_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "org",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "learner_id",
+          "type": "string"
+        },
+        {
+          "name": "course_name",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "course_id",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Certificate",
+      "discriminator": [
+        202,
+        229,
+        222,
+        220,
+        116,
+        20,
+        74,
+        67
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "Certificate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "learner_id",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "course_id",
+            "type": "string"
+          },
+          {
+            "name": "course_name",
+            "type": "string"
+          },
+          {
+            "name": "issue_date",
+            "type": "u64"
+          },
+          {
+            "name": "issuer",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}
