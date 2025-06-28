@@ -34,6 +34,7 @@ export async function POST(req: NextRequest, { params }: { params: { courseId: s
     }
     
     const existingUser:IUser | null = await User.findOne({ username });
+    
     if (!existingUser) {
       const hashedPassword = await bcrypt.hash('Password123', 10); // Default password, change as needed
       const newUser = await User.create({
@@ -48,18 +49,26 @@ export async function POST(req: NextRequest, { params }: { params: { courseId: s
         return NextResponse.json({ message: 'Failed to create learner' }, { status: 500 });
       }
       //update course with new learner
-      course.learners.push(newUser._id);
-      course.save();
-      return NextResponse.json({ message: 'Learner added successfully', user: newUser }, { status: 201 });
+      const res = await Course.findOneAndUpdate(
+      { _id: course._id },
+      { $addToSet: { learners: newUser._id } },
+      
+      );
+      return NextResponse.json({ message: 'Learner added successfully', user: newUser, course }, { status: 201 });
+    
     }else{
-    //update course with new learner
-      if(course.learners.includes(existingUser._id)) {
-        return NextResponse.json({ message: 'Learner already exists in this course', user: existingUser }, { status: 200 });
-      }
-      course.learners.push(existingUser?._id);
-      course.save();
-      return NextResponse.json({ message: 'Learner already exists, added to course', user: existingUser }, { status: 200 });
+      const res = await Course.findOneAndUpdate(
+        { _id: course._id },
+        { $addToSet: { learners: existingUser._id } },
+        )
+        console.log(res);
+        return NextResponse.json({ message: 'Learner added successfully', user: existingUser, course }, { status: 201 });
     }
+
+    
+
+     
+    
     
   } catch (error) {
     console.error('Error adding learner:', error);

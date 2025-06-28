@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  console.log( await bcrypt.hash('admin@123', 10))
+  // console.log( await bcrypt.hash('admin@123', 10))
   const { username, password, role, organizationName }: { username: string; password: string; role: UserRole, organizationName:string } = await req.json();
   if (!['organization'].includes(role)) {
     return Response.json({ message: 'Invalid role' }, { status: 400 });
