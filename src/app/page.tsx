@@ -1,30 +1,28 @@
-'use client'
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Shield, Award, Users, CheckCircle, ArrowRight, Globe, Lock, Zap } from 'lucide-react'
 
 export default function Home() {
-  const [token, setToken] = useState<string | null>(null)
-  const [role, setRole] = useState<string | null>(null)
+  // const [token, setToken] = useState<string | null>(null)
+  // const [role, setRole] = useState<string | null>(null)
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'))
-    setRole(localStorage.getItem('role'))
-  }, [])
+  // useEffect(() => {
+  //   setToken(localStorage.getItem('token'))
+  //   setRole(localStorage.getItem('role'))
+  // }, [])
 
-  if (token) {
-    // Redirect authenticated users to their respective dashboards
-    if (role === 'admin') {
-      window.location.href = '/admin/dashboard'
-    } else if (role === 'organization') {
-      window.location.href = '/dashboard'
-    } else if (role === 'learner') {
-      window.location.href = '/learner-dashboard'
-    }
-    return null
-  }
+  // if (token) {
+  //   // Redirect authenticated users to their respective dashboards
+  //   if (role === 'admin') {
+  //     window.location.href = '/admin/dashboard'
+  //   } else if (role === 'organization') {
+  //     window.location.href = '/dashboard'
+  //   } else if (role === 'learner') {
+  //     window.location.href = '/learner-dashboard'
+  //   }
+  //   return null
+  // }
 
   return (
     <div className="flex-grow min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -44,7 +42,7 @@ export default function Home() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/auth">
+              <Link href="/auth/signup">
                 <Button size="lg" className="px-8 py-3 text-lg font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                   Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -233,7 +231,7 @@ export default function Home() {
               Join the future of digital certification. Secure, transparent, and globally verifiable.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth">
+              <Link href="/auth/signup">
                 <Button size="lg" variant="secondary" className="px-8 py-3 text-lg font-medium bg-white text-blue-600 hover:bg-gray-100 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                   Start Issuing Certificates
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -257,7 +255,7 @@ export default function Home() {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold">Product</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/auth" className="hover:text-white transition-colors">Get Started</Link></li>
+                <li><Link href="/auth/signup" className="hover:text-white transition-colors">Get Started</Link></li>
                 <li><Link href="#features" className="hover:text-white transition-colors">Features</Link></li>
                 <li><Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link></li>
               </ul>

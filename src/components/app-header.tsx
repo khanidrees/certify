@@ -130,7 +130,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
             
             <ThemeSelect />
             
-            <Link href="/auth">
+            <Link href="/auth/signin">
               <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6">
                 Sign In
               </Button>
