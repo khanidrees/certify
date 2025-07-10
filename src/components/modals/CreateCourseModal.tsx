@@ -3,53 +3,25 @@ import { AppModal } from '../app-modal';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { Plus } from 'lucide-react';
+import { createCourse } from '@/app/lib/actions';
 
 const CreateCourseModal = () => {
   const [isCreatingCourse, setIsCreatingCourse] = useState(false);
 
-  const createCourseSubmitHandler = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsCreatingCourse(true)
-    
-    const token = localStorage.getItem('token')
-    const formData = new FormData(e.target as HTMLFormElement)
-    const courseName = formData.get('courseName') as string
-    const description = formData.get('description') as string
-
-    try {
-      const res = await fetch('/api/organization/courses', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ courseName, description }),
-      })
-
-      if (res.ok) {
-        const newCourse = await res.json()
-        // setCourses([...courses, newCourse])
-        // setStats(prev => ({
-        //   ...prev,
-        //   totalCourses: prev.totalCourses + 1,
-        //   recentActivity: prev.recentActivity + 1
-        // }))
-        ;(e.target as HTMLFormElement).reset()
-      } else {
-        alert('Failed to create course')
-      }
-    } catch (error) {
-      alert('Failed to create course')
-    } finally {
-      setIsCreatingCourse(false)
-    }
-  }
+  const initalState = {
+    message : '',
+    errors : {},
+    status: 0
+  };
+  
+  const [state, formAction, isPending] = useActionState(createCourse, initalState);
+  
   return (
     <AppModal title="Create New Course" triggerVariant='default'>
-                <form onSubmit={createCourseSubmitHandler} className="space-y-6">
+                <form action={formAction} className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="courseName" className="text-sm font-medium">
                       Course Name
@@ -63,6 +35,11 @@ const CreateCourseModal = () => {
                       className="h-12"
                     />
                   </div>
+                  {state?.errors?.courseName && (
+                    <div className="text-red-500 text-sm">
+                      {state.errors.courseName}
+                    </div>
+                  )}
                   
                   <div className="space-y-2">
                     <Label htmlFor="description" className="text-sm font-medium">
@@ -77,13 +54,24 @@ const CreateCourseModal = () => {
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"
                     />
                   </div>
+                  {state?.errors?.description && (
+                    <div className="text-red-500 text-sm">
+                      {state.errors.description}
+                    </div>
+                  )}
+                  {state?.message && (
+                    <div className={"text-sm "+ (state.status === 201 ? "text-green-500" : "text-red-500")}>
+                      {state.message}
+                    </div>
+                  )}
+
                   
                   <Button
                     type="submit" 
-                    disabled={isCreatingCourse}
+                    disabled={isPending}
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
                   >
-                    {isCreatingCourse ? (
+                    {isPending ? (
                       <div className="flex items-center gap-2">
                         <LoadingSpinner size="sm" />
                         Creating Course...

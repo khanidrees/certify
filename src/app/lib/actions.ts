@@ -6,6 +6,8 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
+import Course from '@/models/Course';
+import { revalidatePath } from 'next/cache';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -18,7 +20,18 @@ const FormScema = z.object({
 const SignInSchema = z.object({
   username: z.string(),
   password: z.string()
-})
+});
+
+const CourseSchema = z.object({
+  courseName: z.string(),
+  description: z.string(),
+});
+
+const LearnerSchema = z.object({
+  learnerName: z.string(),
+  username: z.string(),
+  courseId: z.string()
+});
 
 export type SignUpState = {
   errors?: {
@@ -41,6 +54,26 @@ export type SignInState = {
   status: number;
   prevState?: SignInState;
 } | undefined;
+
+export type courseCreateState = {
+  errors?: {
+    courseName?: string[];
+    description?: string[];
+  };
+  message: string ;
+  status: number;
+  prevState?: courseCreateState;
+}
+
+export type learnerAddState = {
+  errors?: {
+    learnerName?: string[];
+    learnerEmail?: string[];
+  };
+  message: string ;
+  status: number;
+  prevState?: learnerAddState;
+}
 
 export async function signUp(prevState: SignUpState, formData: FormData): Promise<SignUpState>  {
   //validate using zod
@@ -135,4 +168,103 @@ export async function signOut() {
   allCookies.delete('token');
   allCookies.delete('role');
   return { message: 'User logged out', status: 200 };
+}
+
+export async function createCourse(prevState : courseCreateState, formData: FormData) {
+  // validate form data
+  const validatedFields = CourseSchema.safeParse({
+    courseName: formData.get('courseName'),
+    description: formData.get('description')
+  });
+
+  if(!validatedFields.success){
+    return { 
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Invalid form data', 
+      status: 400 
+    };
+  }
+  // verify token
+  const allCookies = await cookies();
+  const token = allCookies.get('token')?.value;
+  if (!token) return { message: 'Unauthorized', status: 401 };
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+    if (payload.role !== 'organization') return { message: 'Forbidden', status: 403 };
+    await dbConnect();
+    const course = await Course.create({ courseName: validatedFields.data.courseName, description: validatedFields.data.description, organizationId: payload.userId });
+    revalidatePath('/dashboard');
+    return { message: 'Course added', status: 201  };
+    
+  } catch (error) {
+    console.error('Error adding course:', error);
+    return { message: 'Internal Server Error', status: 500 };
+  }
+
+}
+
+export async function addLearner(prevState : learnerAddState, formData: FormData) {
+  // validate form data
+  const validatedFields = LearnerSchema.safeParse({
+    learnerName: formData.get('learnerName'),
+    username: formData.get('username'),
+    courseId: formData.get('courseId')
+  });
+
+  if(!validatedFields.success){
+    return { 
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Invalid form data', 
+      status: 400 
+    };
+  }
+  const { learnerName, username, courseId } = validatedFields.data;
+  // verify token
+  const allCookies = await cookies();
+  const token = allCookies.get('token')?.value;
+  if (!token) return { message: 'Unauthorized', status: 401 };
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+    if (!payload || payload.role !== 'organization') return { message: 'Forbidden', status: 403 };
+    await dbConnect();
+    const course = await Course.findOne({ _id:  courseId, organizationId: payload.userId });
+    if (!course) return { message: 'Course not found', status: 404 };
+    let user = await User.findOne({ username });
+    if (!user) {
+      user = await User.create({  learnerName, username, role: 'learner' });
+    }else if(course.learners.includes(user._id)){
+      return { message: 'Learner already added', status: 409 };  
+    }
+    course.learners.push(user._id);
+    await course.save();
+
+    revalidatePath('/dashboard');
+
+    return { message: 'Learner added', status: 201  };
+    
+  } catch (error) {
+    console.error('Error adding learner:', error);
+    return { message: 'Internal Server Error', status: 500 };
+  }
+
+}
+
+export async function updateOrgStatus(userId: string) {
+  const allCookies = await cookies();
+  const token = allCookies.get('token')?.value;
+  if (!token) return { message: 'Unauthorized', status: 401 };
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+    if (payload.role !== 'admin') return { message: 'Forbidden', status: 403 };
+    await dbConnect();
+    const user = await User.findOne({ _id: userId });
+    if (!user) return { message: 'User not found', status: 404 };
+    user.isApproved = !user.isApproved;
+    await user.save();
+    revalidatePath('admin/dashboard');
+    return { message: 'Organization status updated', status: 200 };
+  } catch (error) {
+    console.error('Error updating organization status:', error);
+    return { message: 'Internal Server Error', status: 500 };
+  }
 }

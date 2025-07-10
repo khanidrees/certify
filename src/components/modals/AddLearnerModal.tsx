@@ -1,60 +1,32 @@
 'use client'
 
-import { Types } from "mongoose";
+
 import { AppModal } from '../app-modal';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { ICourse } from "@/models/Course";
 import { UserPlus } from "lucide-react";
+import { addLearner } from '@/app/lib/actions';
+import { error } from 'console';
 
 
 const AddLearnerModal = ({ courseId }: { courseId: string }) => {
-  const [isAddingLearner, setIsAddingLearner] = useState<string | null>(null);
+  const initalState = {
+    errors: {},
+    message : '',
+    status: 0
+  }
 
-  const addLearnerSubmitHandler = async (e: React.FormEvent, courseId: string) => {
-      e.preventDefault()
-      setIsAddingLearner(courseId.toString())
-      
-      const formData = new FormData(e.target as HTMLFormElement)
-      const username = formData.get('username') as string
-      const learnerName = formData.get('learnerName') as string
+  const [state, formAction, isPending] = useActionState(addLearner, initalState);
   
-      const token = localStorage.getItem('token')
-      try {
-        const res = await fetch(`/api/organization/courses/${courseId.toString()}/learners`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ username, learnerName }),
-        })
-  
-        if (res.ok) {
-          // Refresh the courses data
-          const dashboardRes = await fetch('/api/organization/dashboard', {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          const dashboardData = await dashboardRes.json()
-          // setCourses(dashboardData.courses || [])
-          ;(e.target as HTMLFormElement).reset()
-        } else {
-          alert('Failed to add learner')
-        }
-      } catch (error) {
-        alert('Failed to add learner')
-      } finally {
-        setIsAddingLearner(null)
-      }
-    }
   return (
     <AppModal title="Add Learner" triggerClassName="flex-1">
       <form 
         className="space-y-6" 
-        onSubmit={(e) => addLearnerSubmitHandler(e, courseId)}
+        action={formAction}
       >
         <div className="space-y-2">
           <Label htmlFor="username" className="text-sm font-medium">
@@ -69,6 +41,12 @@ const AddLearnerModal = ({ courseId }: { courseId: string }) => {
             className="h-12"
           />
         </div>
+
+        {state?.errors?.username && (
+          <div className="text-red-500 text-sm">
+            {state.errors.username}
+          </div>
+        )}
         
         <div className="space-y-2">
           <Label htmlFor="learnerName" className="text-sm font-medium">
@@ -83,13 +61,25 @@ const AddLearnerModal = ({ courseId }: { courseId: string }) => {
             className="h-12"
           />
         </div>
+          {state?.errors?.learnerName && (
+            <div className="text-red-500 text-sm">
+              {state.errors.learnerName}
+            </div>
+          )}
+
+          {state?.message && (
+            <div className={"text-sm " + (state.status === 201 ? "text-green-500" : "text-red-500")}>
+              {state.message}
+            </div>
+          )}
+          <input type="hidden" name="courseId" value={courseId} />
 
         <Button 
           className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium" 
           type="submit"
-          disabled={isAddingLearner === courseId.toString()}
+          disabled={isPending}
         >
-          {isAddingLearner === courseId.toString() ? (
+          {isPending ? (
             <div className="flex items-center gap-2">
               <LoadingSpinner size="sm" />
               Adding Learner...

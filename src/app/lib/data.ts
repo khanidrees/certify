@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import '@/models/User';
 import Course from '@/models/Course';
 import { dbConnect } from '@/lib/mongodb';
+import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -27,6 +28,50 @@ export async function fetchDashboardData() {
         courses,
       }
        };
+  } catch (e){
+    console.log(e);
+    return { message: 'Server Error', status: 500 , data : null};
+  }
+}
+
+export async function fetchAdminDashBoard(){
+  const allCookies = await cookies();
+  const token = allCookies.get('token')?.value;
+  if (!token) return { message: 'Unauthorized', tatus: 401 };
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+    if (payload.role !== 'admin') return { message: 'Forbidden', status: 403 };
+    await dbConnect();
+    const users = await User.find({ role: 'organization' }).lean();
+    return { 
+      message : 'Admin dashboard data',
+      status: 200,
+      data: {
+        users,
+      }
+    };
+  } catch (e){
+    console.log(e);
+    return { message: 'Server Error', status: 500 , data : null};
+  }
+}
+
+export async function fetchLearner(){
+  const allCookies = await cookies();
+  const token = allCookies.get('token')?.value;
+  if (!token) return { message: 'Unauthorized', tatus: 401 };
+  try {
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
+    if (payload.role !== 'learner') return { message: 'Forbidden', status: 403 };
+    await dbConnect();
+    const user = await User.findOne({ _id: payload.userId }).lean();
+    return { 
+      message : 'Learner dashboard data',
+      status: 200,
+      data: {
+        user,
+      }
+    };
   } catch (e){
     console.log(e);
     return { message: 'Server Error', status: 500 , data : null};

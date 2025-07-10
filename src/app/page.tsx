@@ -4,25 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Shield, Award, Users, CheckCircle, ArrowRight, Globe, Lock, Zap } from 'lucide-react'
 
 export default function Home() {
-  // const [token, setToken] = useState<string | null>(null)
-  // const [role, setRole] = useState<string | null>(null)
-
-  // useEffect(() => {
-  //   setToken(localStorage.getItem('token'))
-  //   setRole(localStorage.getItem('role'))
-  // }, [])
-
-  // if (token) {
-  //   // Redirect authenticated users to their respective dashboards
-  //   if (role === 'admin') {
-  //     window.location.href = '/admin/dashboard'
-  //   } else if (role === 'organization') {
-  //     window.location.href = '/dashboard'
-  //   } else if (role === 'learner') {
-  //     window.location.href = '/learner-dashboard'
-  //   }
-  //   return null
-  // }
+  
 
   return (
     <div className="flex-grow min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
