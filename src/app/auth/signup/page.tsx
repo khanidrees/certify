@@ -132,7 +132,7 @@ export default function SignupPage() {
               }`}>
                 {state?.message}
               </div>
-            )}
+              )}
 
               <button
                 type="submit"

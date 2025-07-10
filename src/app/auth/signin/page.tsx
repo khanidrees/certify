@@ -3,68 +3,26 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { useState, ChangeEvent, FormEvent } from 'react'
+import { useActionState, useState } from 'react';
 import { Building2, Mail, Lock, Eye, EyeOff } from 'lucide-react'
-import { toast } from 'sonner'
+import { signIn, SignInState } from '@/app/lib/actions'
+// import { toast } from 'sonner'
 
-type Role = 'organization'
+type Role = 'organization';
 
-export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true)
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [form, setForm] = useState<{ username: string; password: string; role: Role; organizationName: string }>({
-    username: '',
-    password: '',
-    organizationName: '',
-    role: 'organization',
-  })
-  const [msg, setMsg] = useState('')
+const initalState: SignInState = {
+  message : '',
+  errors : {},
+  status: 0
+};
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, [e.target.name]: e.target.value })
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setMsg('')
-
-    try {
-      const url = isLogin ? '/api/auth/login' : '/api/auth/signup'
-      const res = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(form),
-        headers: { 'Content-Type': 'application/json' },
-      })
-      const data = await res.json()
-
-      if (data.message === 'User created') {
-        toast.success('Sign up request sent successfully! Please wait for admin approval.');
-        setForm({ username: '', password: '', organizationName: '', role: 'organization' })
-        return
-      }
-
-      toast(data.message || '')
-
-      if (data.token) {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('role', data.role)
-        
-        if (data.role === 'organization') {
-          window.location.href = '/dashboard'
-        } else if (data.role === 'admin') {
-          window.location.href = '/admin/dashboard'
-        } else {
-          window.location.href = '/learner-dashboard'
-        }
-      }
-    } catch (error) {
-      toast.error('An error occurred. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
+export default function SignInPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [state, formAction] = useActionState(signIn, initalState);
+  
+  if(state?.status === 200) {
+    window.location.href = '/';
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
@@ -73,48 +31,24 @@ export default function AuthPage() {
             <span className="text-white font-bold text-lg">VC</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {isLogin ? 'Welcome Back' : 'Create Organization Account'}
+            Welcome Back
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            {isLogin 
-              ? 'Sign in to your VerifyCertify account' 
-              : 'Request access for your organization'
-            }
+            Sign in to your VerifyCertify account
           </p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 backdrop-blur dark:bg-gray-800/80">
           <CardHeader className="space-y-1 pb-4">
             <CardTitle className="text-2xl font-semibold text-center">
-              {isLogin ? 'Sign In' : 'Organization Registration'}
+              Sign In
             </CardTitle>
             <CardDescription className="text-center">
-              {isLogin 
-                ? 'Enter your credentials to access your dashboard' 
-                : 'Submit your organization details for approval'
-              }
+              Enter your credentials to access your dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {!isLogin && (
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                    <Building2 className="h-4 w-4" />
-                    Organization Name
-                  </label>
-                  <Input
-                    type="text"
-                    name="organizationName"
-                    placeholder="Enter your organization name"
-                    value={form.organizationName}
-                    onChange={handleChange}
-                    required
-                    className="h-12"
-                  />
-                </div>
-              )}
-
+            <form action={formAction}  className="space-y-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
                   <Mail className="h-4 w-4" />
@@ -123,9 +57,7 @@ export default function AuthPage() {
                 <Input
                   name="username"
                   placeholder="Enter your email"
-                  type={isLogin ? 'text' : 'email'}
-                  value={form.username}
-                  onChange={handleChange}
+                  type='text'
                   required
                   className="h-12"
                 />
@@ -141,8 +73,6 @@ export default function AuthPage() {
                     name="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
-                    value={form.password}
-                    onChange={handleChange}
                     required
                     className="h-12 pr-10"
                   />
@@ -155,57 +85,42 @@ export default function AuthPage() {
                   </button>
                 </div>
               </div>
+              <div id="org-name-error" aria-live="polite" aria-atomic="true">
+                {state?.errors?.username &&
+                  state?.errors.username.map((error: string) => (
+                    <p className="mt-2 text-sm text-red-500" key={error}>
+                      {error}
+                    </p>
+                  ))}
+              </div>
 
-              <Button
+              {state?.message && (
+              <div className={`mt-4 p-4 rounded-lg text-center text-sm ${
+                state?.status == 200 || state?.status == 201
+                  ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200'
+                  : 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200'
+              }`}>
+                {state?.message}
+              </div>
+              )}
+
+              <button
                 type="submit"
-                disabled={isLoading}
                 className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <LoadingSpinner size="sm" />
-                    {isLogin ? 'Signing In...' : 'Submitting Request...'}
-                  </div>
-                ) : (
-                  isLogin ? 'Sign In' : 'Submit Request'
-                )}
-              </Button>
+                Sign In
+              </button>
             </form>
 
             <div className="mt-6 text-center">
               <button
-                type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin)
-                  setMsg('')
-                  setForm({ username: '', password: '', organizationName: '', role: 'organization' })
-                }}
+                type="submit"
+      
                 className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
-                {isLogin ? 'Need an organization account?' : 'Already have an account?'}
+                Need an organization account?
               </button>
             </div>
-
-            {!isLogin && (
-              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p className="text-sm text-blue-800 dark:text-blue-200 text-center">
-                  <strong>Note:</strong> Organization registration requires admin approval.
-                  <br />
-                  <br />
-                  <span className="font-semibold">For learner credentials, contact your organization directly.</span>
-                </p>
-              </div>
-            )}
-
-            {/* {msg && (
-              <div className={`mt-4 p-4 rounded-lg text-center text-sm ${
-                msg.includes('successfully') || msg.includes('sent')
-                  ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200'
-                  : 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200'
-              }`}>
-                {msg}
-              </div>
-            )} */}
           </CardContent>
         </Card>
       </div>

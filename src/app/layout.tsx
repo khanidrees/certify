@@ -3,6 +3,8 @@ import './globals.css'
 import { AppProviders } from '@/components/app-providers'
 import { AppLayout } from '@/components/app-layout'
 import React from 'react'
+import { cookies } from 'next/headers'
+import { UserRole } from '@/models/User'
 
 export const metadata: Metadata = {
   title: 'VerifyCertify',
@@ -16,12 +18,17 @@ const links: { label: string; path: string }[] = [
   // { label: 'Counter Program', path: '/counter' },
 ]
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const role = (await cookies()).get('role')?.value as UserRole || null;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased`}>
         <AppProviders>
-          <AppLayout links={links}>{children}</AppLayout>
+          <AppLayout 
+            links={links}
+            role={role}  
+          >{children}</AppLayout>
         </AppProviders>
       </body>
     </html>

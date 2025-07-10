@@ -8,30 +8,23 @@ import { ThemeSelect } from '@/components/theme-select'
 import { ClusterUiSelect } from './cluster/cluster-ui'
 import { WalletButton } from '@/components/solana/solana-provider'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { UserRole } from '@/models/User'
+import { signOut } from '@/app/lib/actions'
 
-export function AppHeader({ links = [] }: { links: { label: string; path: string }[] }) {
+export function AppHeader({ links = [], role }: { links: { label: string; path: string }[], role: UserRole | null }) {
   const pathname = usePathname()
   const [showMenu, setShowMenu] = useState(false)
-  const [token, setToken] = useState<string | null>(null)
-  const [role, setRole] = useState<string | null>(null)
+  
 
-  useEffect(() => {
-    let storedToken = localStorage.getItem('token')
-    let storedRole = localStorage.getItem('role')
-    setToken(storedToken)
-    setRole(storedRole)
-  }, [])
+  
 
   function isActive(path: string) {
     return path === '/' ? pathname === '/' : pathname.startsWith(path)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('role')
-    setToken(null)
-    setRole(null)
-    window.location.href = '/'
+  const handleLogout = async() => {
+    await signOut();
+    window.location.href = '/auth/signin';
   }
 
   const getRoleIcon = (userRole: string) => {
@@ -61,7 +54,7 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
   }
 
   const getNavigationLinks = () => {
-    if (!token) return []
+    if (!role) return []
     
     switch (role) {
       case 'admin':
@@ -80,13 +73,15 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
           { label: 'Certificates', path: '/learner/certificates', icon: <Shield className="h-4 w-4" /> },
         ]
       default:
-        return []
+        return [
+
+        ]
     }
   }
 
   const navigationLinks = getNavigationLinks()
 
-  if (!token) {
+  if (!role) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 dark:bg-gray-900/95 dark:supports-[backdrop-filter]:bg-gray-900/80">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
