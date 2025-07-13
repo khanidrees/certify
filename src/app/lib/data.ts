@@ -11,11 +11,11 @@ export async function fetchDashboardData() {
   const allCookies = await cookies();
   const token = allCookies.get('token')?.value;
   console.log("token: ", token);
-  if (!token) return Response.json({ message: 'Unauthorized' }, { status: 401 });
+  if (!token) return { message: 'Unauthorized' , status: 401 };
   try {
     const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
     console.log('payload', payload)
-    if (payload.role !== 'organization') return Response.json({ message: 'Forbidden' }, { status: 403 });
+    if (payload.role !== 'organization') return { message: 'Forbidden' , status: 403 };
     await dbConnect();
     const courses = await Course.find({ organizationId: payload.userId })
     .populate('learners', 'username learnerName')  
@@ -30,7 +30,7 @@ export async function fetchDashboardData() {
        };
   } catch (e){
     console.log(e);
-    return { message: 'Server Error', status: 500 , data : null};
+    return { message: 'Server Error', status: 500 };
   }
 }
 
@@ -52,7 +52,7 @@ export async function fetchAdminDashBoard(){
     };
   } catch (e){
     console.log(e);
-    return { message: 'Server Error', status: 500 , data : null};
+    return { message: 'Server Error', status: 500 };
   }
 }
 
@@ -64,7 +64,9 @@ export async function fetchLearner(){
     const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
     if (payload.role !== 'learner') return { message: 'Forbidden', status: 403 };
     await dbConnect();
-    const user = await User.findOne({ _id: payload.userId }).lean();
+    const user = await User.findOne({ _id: payload.userId })
+    .select('learnerName username')
+    .lean();
     return { 
       message : 'Learner dashboard data',
       status: 200,
@@ -74,6 +76,14 @@ export async function fetchLearner(){
     };
   } catch (e){
     console.log(e);
-    return { message: 'Server Error', status: 500 , data : null};
+    return { message: 'Server Error', status: 500 };
   }
+}
+
+export async function getCourseData(id: string) {
+  await dbConnect();
+  const course = await Course.findOne({ _id: id })
+  .populate('learners', 'username learnerName')
+  .lean();
+  return course;
 }

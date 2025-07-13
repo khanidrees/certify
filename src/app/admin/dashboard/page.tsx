@@ -1,6 +1,5 @@
 import { fetchAdminDashBoard } from '@/app/lib/data'
 import ApproveBtn from '@/components/dashboard/ApproveBtn';
-import { Button } from '@/components/ui/button'
 import mongoose from 'mongoose'
 
 

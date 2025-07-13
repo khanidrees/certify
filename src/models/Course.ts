@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema, Model} from "mongoose";
+import mongoose, { Schema, Model} from "mongoose";
 
-export interface ICourse extends Document {
+export interface ICourse  {
+  _id: mongoose.Types.ObjectId;
   courseName: string;
   description: string;
   organizationId: mongoose.Types.ObjectId; // Reference to the organization

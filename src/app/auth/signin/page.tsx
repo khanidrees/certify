@@ -1,14 +1,12 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useActionState, useState } from 'react';
-import { Building2, Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { signIn, SignInState } from '@/app/lib/actions'
 // import { toast } from 'sonner'
 
-type Role = 'organization';
+
 
 const initalState: SignInState = {
   message : '',

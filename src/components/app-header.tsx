@@ -1,9 +1,9 @@
 'use client'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Menu, X, LogOut, User, Settings, Shield, Building2, GraduationCap, Home, Bell } from 'lucide-react'
+import { Menu, X, LogOut, User, Settings, Shield, Building2, GraduationCap, Bell } from 'lucide-react'
 import { ThemeSelect } from '@/components/theme-select'
 import { ClusterUiSelect } from './cluster/cluster-ui'
 import { WalletButton } from '@/components/solana/solana-provider'
@@ -60,17 +60,17 @@ export function AppHeader({ links = [], role }: { links: { label: string; path: 
       case 'admin':
         return [
           { label: 'Dashboard', path: '/admin/dashboard', icon: <Shield className="h-4 w-4" /> },
-          { label: 'Organizations', path: '/admin/organizations', icon: <Building2 className="h-4 w-4" /> },
+          // { label: 'Organizations', path: '/admin/organizations', icon: <Building2 className="h-4 w-4" /> },
         ]
       case 'organization':
         return [
           { label: 'Dashboard', path: '/dashboard', icon: <Building2 className="h-4 w-4" /> },
-          { label: 'Courses', path: '/organization/courses', icon: <GraduationCap className="h-4 w-4" /> },
+          // { label: 'Courses', path: '/organization/courses', icon: <GraduationCap className="h-4 w-4" /> },
         ]
       case 'learner':
         return [
           { label: 'Dashboard', path: '/learner-dashboard', icon: <GraduationCap className="h-4 w-4" /> },
-          { label: 'Certificates', path: '/learner/certificates', icon: <Shield className="h-4 w-4" /> },
+          // { label: 'Certificates', path: '/learner/certificates', icon: <Shield className="h-4 w-4" /> },
         ]
       default:
         return [
@@ -205,15 +205,17 @@ export function AppHeader({ links = [], role }: { links: { label: string; path: 
               <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
             </div>
           )}
+          {process.env.NODE_ENV !== 'production' && (
+            <ClusterUiSelect />
+          )} 
           
-          <ClusterUiSelect />
           <ThemeSelect />
           
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
+          {/* <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
             <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs"></span>
-          </Button>
+          </Button> */}
           
           {/* User menu */}
           <DropdownMenu>

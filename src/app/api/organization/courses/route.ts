@@ -1,7 +1,7 @@
 import Course from "@/models/Course";
 import jwt from "jsonwebtoken";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   //create a course
   const { courseName, description } = await req.json();
   const token = req.headers.get('authorization')?.split(' ')[1];

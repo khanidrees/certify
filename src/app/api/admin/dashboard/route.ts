@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     
     return Response.json(users);
   } catch (error) {
-    return Response.json({ message: 'Invalid token' }, { status: 401 });
+    return Response.json({ message: 'Invalid token', error }, { status: 401 });
   }
 }
 
@@ -46,6 +46,6 @@ export async function PATCH(req: NextRequest) {
     
     return Response.json({ message: 'User updated', user });
   } catch (error) {
-    return Response.json({ message: 'Invalid token' }, { status: 401 });
+    return Response.json({ message: 'Invalid token', error }, { status: 401 });
   }
 }

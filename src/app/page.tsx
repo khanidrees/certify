@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Shield, Award, Users, CheckCircle, ArrowRight, Globe, Lock, Zap } from 'lucide-react'
+import { Shield, Award, Users, ArrowRight, Globe, Lock, Zap } from 'lucide-react'
 
 export default function Home() {
   
@@ -38,7 +38,7 @@ export default function Home() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-4xl mx-auto">
+            <div  className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-4xl mx-auto">
               <div className="text-center space-y-2">
                 <div className="text-3xl font-bold text-blue-600">100%</div>
                 <div className="text-gray-600 dark:text-gray-400">Secure & Tamper-Proof</div>
@@ -57,7 +57,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section id="features" className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
@@ -157,7 +157,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      <section id="how-it-works" className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">

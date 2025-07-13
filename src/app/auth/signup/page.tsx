@@ -1,5 +1,4 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 // import { LoadingSpinner } from '@/components/ui/loading-spinner'
@@ -10,7 +9,6 @@ import { signUp, SignUpState } from '@/app/lib/actions'
 import { useActionState, useState } from 'react'
 
 
-type Role = 'organization'
 
 export default function SignupPage() {
   const initalState: SignUpState = {
@@ -145,7 +143,7 @@ export default function SignupPage() {
                     Submitting Request...
                   </div>
                 ) : ( */}
-                  'Submit Request'
+                Submit Request
                 {/* )} */}
                 
               </button>

@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {  LoadingPage } from '@/components/ui/loading-spinner'
-import mongoose, { Types } from 'mongoose'
 import Link from 'next/link'
 import {  
   Users, 
@@ -22,17 +21,11 @@ import CreateCourseModal from '@/components/modals/CreateCourseModal'
 import AddLearnerModal from '@/components/modals/AddLearnerModal'
 import { fetchDashboardData } from '../lib/data'
 import { Suspense } from 'react'
+import { ICourse } from '@/models/Course'
 
 
-interface Course extends mongoose.Document<Types.ObjectId> {
-  courseName: string
-  description: string
-  createdAt: Date
-  learners?: {
-    learnerName: string
-    username: string
-  }[]
-}
+
+
 
 interface DashboardStats {
   totalCourses: number
@@ -41,14 +34,20 @@ interface DashboardStats {
   recentActivity: number
 }
 
-
+type Res = {
+  message: string,
+  status: number,
+  data?: {
+    courses?:ICourse[]
+  }
+}
 
 
 
 export default async function Dashboard() {
-  const response : any = await fetchDashboardData();
+  const response : Res = await fetchDashboardData();
 
-  let totalLearners = response?.data?.courses?.reduce((acc: number, course: Course) => 
+  const totalLearners = response?.data?.courses?.reduce((acc: number, course: ICourse) => 
           acc + (course.learners?.length || 0), 0
         ) || 0;
 
@@ -56,7 +55,7 @@ export default async function Dashboard() {
     totalCourses: response?.data?.courses?.length || 0,
     totalLearners,
     totalCertificatesIssued: Math.floor(totalLearners * 0.8), // Assuming 80% completion rate
-    recentActivity: response?.data?.courses?.filter((course: Course) => {
+    recentActivity: response?.data?.courses?.filter((course: ICourse) => {
       const courseDate = new Date(course.createdAt)
       const weekAgo = new Date()
       weekAgo.setDate(weekAgo.getDate() - 7)
@@ -218,8 +217,10 @@ export default async function Dashboard() {
 
             {Array.isArray(response?.data?.courses) && response?.data?.courses.length !== 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {response?.data?.courses.map((course: Course, index: number) => (
-                  <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800 group">
+                {response?.data?.courses.map((course: ICourse, index: number) =>{
+                  
+                  
+                    return(<Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800 group">
                     <CardHeader className="pb-4">
                       <div className="flex items-start justify-between">
                         <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-4">
@@ -278,7 +279,7 @@ export default async function Dashboard() {
                           <AddLearnerModal courseId={course._id.toString()} />
                           
                           <Link
-                            href={`/organization/courses/${course._id}`}
+                            href={`/organization/courses/${course._id.toString()}`}
                             className="flex-1"
                           >
                             <Button 
@@ -292,8 +293,10 @@ export default async function Dashboard() {
                         </div>
                       </div>
                     </CardContent>
-                  </Card>
-                ))}
+                  </Card>)
+                
+                }
+              )}
               </div>
               
             ) : (

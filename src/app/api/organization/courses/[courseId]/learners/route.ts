@@ -1,15 +1,14 @@
 // POst a learner
 import { NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/mongodb';
-import Course, { ICourse } from '@/models/Course';
+import Course  from '@/models/Course';
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '@/models/User';
 import { NextRequest } from 'next/server';
 import bcrypt from 'bcrypt';
-import mongoose, { mongo, ObjectId } from 'mongoose';
 const JWT_SECRET = process.env.JWT_SECRET as string;
-export async function POST(req: NextRequest, { params }: { params: { courseId: string } }) {
-  const { courseId } = params;
+export async function POST(req: NextRequest ) {
+  const courseId =  req.nextUrl.searchParams.get('courseId') as string;
   const auth = req.headers.get('authorization');
   if (!auth) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   
@@ -54,7 +53,7 @@ export async function POST(req: NextRequest, { params }: { params: { courseId: s
       { $addToSet: { learners: newUser._id } },
       
       );
-      return NextResponse.json({ message: 'Learner added successfully', user: newUser, course }, { status: 201 });
+      return NextResponse.json({ message: 'Learner added successfully', user: newUser, course: res}, { status: 201 });
     
     }else{
       const res = await Course.findOneAndUpdate(

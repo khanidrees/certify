@@ -1,17 +1,15 @@
 
 
-import { LoadingSpinner, LoadingPage } from '@/components/ui/loading-spinner'
-import Link from 'next/link'
-import { toast } from 'sonner'
-import { Suspense, } from 'react'
-import { Award, Share2, ExternalLink, Calendar, Building2, User } from 'lucide-react'
+import {  LoadingPage } from '@/components/ui/loading-spinner'
+import { Award, Building2, User } from 'lucide-react'
 import { fetchLearner } from '../lib/data'
 import Certificates from '@/components/dashboard/Certificates'
+import { Suspense } from 'react'
 
 const LearnersDashboard = async() => {
   const response = await fetchLearner();
-  const { data, message, status } = response;
-  console.log(data)
+  const { data } = response;
+  console.log(data?.user?._id);
   return (
     <Suspense fallback={<LoadingPage />}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -54,7 +52,10 @@ const LearnersDashboard = async() => {
               </div>
             </div>
           </div>
-          <Certificates userId={data?.user?.id || ''} />
+          {data?.user?._id &&
+            <Certificates userId={data?.user?._id.toString()} />
+          }
+          
           
         </div>
       </div>

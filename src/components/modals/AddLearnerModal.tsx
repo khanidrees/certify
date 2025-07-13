@@ -5,12 +5,10 @@ import { AppModal } from '../app-modal';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useActionState, useState } from 'react';
+import { useActionState } from 'react';
 import { LoadingSpinner } from '../ui/loading-spinner';
-import { ICourse } from "@/models/Course";
 import { UserPlus } from "lucide-react";
 import { addLearner } from '@/app/lib/actions';
-import { error } from 'console';
 
 
 const AddLearnerModal = ({ courseId }: { courseId: string }) => {
@@ -21,7 +19,7 @@ const AddLearnerModal = ({ courseId }: { courseId: string }) => {
   }
 
   const [state, formAction, isPending] = useActionState(addLearner, initalState);
-  
+  console.log(courseId)
   return (
     <AppModal title="Add Learner" triggerClassName="flex-1">
       <form 

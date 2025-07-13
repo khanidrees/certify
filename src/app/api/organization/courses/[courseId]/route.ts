@@ -1,19 +1,18 @@
 // GET course by ID
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
 import Course from '@/models/Course';
 
-export async function GET(request: Request, { params }: { params: { courseId: string } }) {
-  const { courseId } = params;
+export async function GET(request: NextRequest, { params } : { params: Promise<{ courseId: string }> }) {
+  const {  courseId } = await params;
 
-  if (!ObjectId.isValid(courseId)) {
-    return NextResponse.json({ error: 'Invalid course ID' }, { status: 400 });
-  }
+  // if (!ObjectId.isValid(courseId)) {
+  //   return NextResponse.json({ error: 'Invalid course ID' }, { status: 400 });
+  // }
 
   try {
     await dbConnect();
-    const course = await Course.findOne({ _id: new ObjectId(courseId) })
+    const course = await Course.findOne({ _id: courseId })
     .populate('learners', 'learnerName username')
     ;
 

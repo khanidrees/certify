@@ -1,7 +1,7 @@
 'use server'
 
 import { dbConnect } from '@/lib/mongodb';
-import User, { IUser, UserRole } from '@/models/User';
+import User, { IUser } from '@/models/User';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -192,7 +192,7 @@ export async function createCourse(prevState : courseCreateState, formData: Form
     const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
     if (payload.role !== 'organization') return { message: 'Forbidden', status: 403 };
     await dbConnect();
-    const course = await Course.create({ courseName: validatedFields.data.courseName, description: validatedFields.data.description, organizationId: payload.userId });
+    await Course.create({ courseName: validatedFields.data.courseName, description: validatedFields.data.description, organizationId: payload.userId });
     revalidatePath('/dashboard');
     return { message: 'Course added', status: 201  };
     

@@ -2,7 +2,7 @@
 
 import { getCounterProgram, getCounterProgramId } from '@project/anchor'
 import { useConnection } from '@solana/wallet-adapter-react'
-import { Cluster, Keypair, PublicKey } from '@solana/web3.js'
+import { Cluster, PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useCluster } from '../cluster/cluster-data-access'
@@ -10,7 +10,6 @@ import { useAnchorProvider } from '../solana/solana-provider'
 import { useTransactionToast } from '../use-transaction-toast'
 import { toast } from 'sonner'
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
-import { get } from 'http'
 
 export type createCertArgs = {
   name: string

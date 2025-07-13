@@ -3,13 +3,12 @@ import { AppModal } from '../app-modal';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import { useActionState, useState } from 'react';
+import { useActionState, } from 'react';
 import { LoadingSpinner } from '../ui/loading-spinner';
 import { Plus } from 'lucide-react';
 import { createCourse } from '@/app/lib/actions';
 
 const CreateCourseModal = () => {
-  const [isCreatingCourse, setIsCreatingCourse] = useState(false);
 
   const initalState = {
     message : '',

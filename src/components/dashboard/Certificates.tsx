@@ -2,11 +2,13 @@
 import { useCounterProgram } from '../counter/counter-data-access';
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Award, Calendar, ExternalLink, Link, Share2 } from 'lucide-react';
+import { Award, Calendar, ExternalLink, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LoadingSpinner } from '../ui/loading-spinner';
+import Link from 'next/link';
 
 const Certificates = ({userId}: {userId: string}) => {
+  console.log('userId', userId);
   const { useCertificatesByLearner } = useCounterProgram()
   const certificates = useCertificatesByLearner(userId);
 
@@ -15,6 +17,7 @@ const Certificates = ({userId}: {userId: string}) => {
     navigator.clipboard.writeText(shareUrl)
     toast.success('Certificate link copied to clipboard!')
   }
+  console.log(certificates);
   return (
     
     <div className="space-y-6">
@@ -26,7 +29,7 @@ const Certificates = ({userId}: {userId: string}) => {
           <LoadingSpinner size="sm" />
         )}
       </div>
-
+        
     {certificates.isLoading ? (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
@@ -64,13 +67,13 @@ const Certificates = ({userId}: {userId: string}) => {
               </div>
               
               <div className="flex gap-2">
-                <Link
-                  href={`/public/course/${cert.account.courseId}/learner/${cert.account.learnerId}`}
-                  className="flex-1"
-                >
+                  <Link 
+                  className='flex-1'
+                  href={`/public/course/${cert.account.courseId}/learner/${cert.account.learnerId}`}>
                   <Button 
                     variant="outline" 
                     className="w-full h-10 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Verify

@@ -6,12 +6,22 @@ import { LoadingSpinner, LoadingPage } from '@/components/ui/loading-spinner'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useParams } from 'next/navigation'
 import React, { useEffect } from 'react'
-import { Award, Users, Calendar, BookOpen, Wallet, CheckCircle } from 'lucide-react'
+import { Award, Users, Calendar, BookOpen, Wallet } from 'lucide-react'
+import { Types } from 'mongoose'
+
 
 const CoursePage = () => {
   const params = useParams()
   const courseId = params.courseId as string
-  const [course, setCourse] = React.useState<any>({
+  const [course, setCourse] = React.useState<{
+    courseName: string
+    description: string
+    createdAt: Date
+    learners: { 
+      _id: Types.ObjectId;
+      learnerName: string; 
+      username: string }[]
+  }>({
     courseName: '',
     description: '',
     createdAt: new Date(),
@@ -167,7 +177,7 @@ const CoursePage = () => {
 
           {course.learners.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {course.learners.map((learner: any, index: number) => (
+              {course.learners.map((learner: { learnerName: string; username: string; _id: Types.ObjectId }, index: number) => (
                 <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800">
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
