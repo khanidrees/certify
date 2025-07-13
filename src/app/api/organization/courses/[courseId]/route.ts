@@ -1,6 +1,7 @@
 // GET course by ID
 import { NextRequest, NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/mongodb';
+import '@/models/User';
 import Course from '@/models/Course';
 
 export async function GET(request: NextRequest, { params } : { params: Promise<{ courseId: string }> }) {
