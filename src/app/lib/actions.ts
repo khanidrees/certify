@@ -231,7 +231,7 @@ export async function addLearner(prevState : learnerAddState, formData: FormData
     if (!course) return { message: 'Course not found', status: 404 };
     let user = await User.findOne({ username });
     if (!user) {
-      user = await User.create({  learnerName, username, role: 'learner' });
+      user = await User.create({  learnerName, username, role: 'learner', password: 'Password123' });
     }else if(course.learners.includes(user._id)){
       return { message: 'Learner already added', status: 409 };  
     }
