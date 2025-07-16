@@ -1,11 +1,12 @@
-import mongoose, { Schema, Model} from "mongoose";
+import mongoose, { Schema, Model, PopulatedDoc} from "mongoose";
+import { IUser } from "./User";
 
 export interface ICourse  {
   _id: mongoose.Types.ObjectId;
   courseName: string;
   description: string;
   organizationId: mongoose.Types.ObjectId; // Reference to the organization
-  learners: mongoose.Types.ObjectId[]; // Optional field to track learners enrolled in the course
+  learners: PopulatedDoc<IUser & Document>[]; // Optional field to track learners enrolled in the course
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,3 +22,4 @@ const CourseSchema: Schema<ICourse> = new mongoose.Schema(
   }
 );
 export default (mongoose.models.Course as Model<ICourse>) || mongoose.model<ICourse>('Course', CourseSchema);
+

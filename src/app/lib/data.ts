@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken';
 import '@/models/User';
-import Course from '@/models/Course';
+import Course, { ICourse } from '@/models/Course';
 import { dbConnect } from '@/lib/mongodb';
-import User from '@/models/User';
+import User, { IUser } from '@/models/User';
+import { PopulatedCourse } from '@/components/ui/Course';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -82,8 +83,8 @@ export async function fetchLearner(){
 
 export async function getCourseData(id: string) {
   await dbConnect();
-  const course = await Course.findOne({ _id: id })
+  const course: PopulatedCourse | null  = await Course.findOne({ _id: id })
   .populate('learners', 'username learnerName')
-  .lean();
-  return course;
+  .orFail() as PopulatedCourse;
+  return JSON.stringify(course);
 }

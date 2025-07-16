@@ -316,7 +316,7 @@ export default async function Dashboard() {
           </div>
 
           {/* Quick Actions Section */}
-          {Array.isArray(response?.data?.courses) && response?.data?.courses.length > 0 && (
+          {/* {Array.isArray(response?.data?.courses) && response?.data?.courses.length > 0 && (
             <div className="mt-12">
               <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                 <CardContent className="p-8">
@@ -343,7 +343,7 @@ export default async function Dashboard() {
                 </CardContent>
               </Card>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </Suspense>
