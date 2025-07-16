@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { LoadingSpinner, LoadingPage } from '@/components/ui/loading-spinner'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { Award, Users, Calendar, BookOpen, Wallet } from 'lucide-react'
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useCounterProgram } from '@/components/counter/counter-data-access'

@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken';
 import '@/models/User';
-import Course, { ICourse } from '@/models/Course';
+import Course from '@/models/Course';
 import { dbConnect } from '@/lib/mongodb';
-import User, { IUser } from '@/models/User';
+import User from '@/models/User';
 import { PopulatedCourse } from '@/components/ui/Course';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;

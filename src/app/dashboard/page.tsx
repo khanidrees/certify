@@ -14,14 +14,13 @@ import {
   Clock,
   Building2,
   GraduationCap,
-  Target,
   Activity
 } from 'lucide-react'
 import CreateCourseModal from '@/components/modals/CreateCourseModal'
 import AddLearnerModal from '@/components/modals/AddLearnerModal'
 import { fetchDashboardData } from '../lib/data'
 import { Suspense } from 'react'
-import { ICourse } from '@/models/Course'
+import { PopulatedCourse } from '@/components/ui/Course'
 
 
 
@@ -38,16 +37,16 @@ type Res = {
   message: string,
   status: number,
   data?: {
-    courses?:ICourse[]
+    courses?:PopulatedCourse[] 
   }
 }
 
 
 
 export default async function Dashboard() {
-  const response : Res = await fetchDashboardData();
+  const response : Res   = await fetchDashboardData() as Res;
 
-  const totalLearners = response?.data?.courses?.reduce((acc: number, course: ICourse) => 
+  const totalLearners = response?.data?.courses?.reduce((acc: number, course: PopulatedCourse) => 
           acc + (course.learners?.length || 0), 0
         ) || 0;
 
@@ -55,7 +54,7 @@ export default async function Dashboard() {
     totalCourses: response?.data?.courses?.length || 0,
     totalLearners,
     totalCertificatesIssued: Math.floor(totalLearners * 0.8), // Assuming 80% completion rate
-    recentActivity: response?.data?.courses?.filter((course: ICourse) => {
+    recentActivity: response?.data?.courses?.filter((course: PopulatedCourse) => {
       const courseDate = new Date(course.createdAt)
       const weekAgo = new Date()
       weekAgo.setDate(weekAgo.getDate() - 7)
@@ -217,7 +216,7 @@ export default async function Dashboard() {
 
             {Array.isArray(response?.data?.courses) && response?.data?.courses.length !== 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {response?.data?.courses.map((course: ICourse, index: number) =>{
+                {response?.data?.courses.map((course: PopulatedCourse, index: number) =>{
                   
                   
                     return(<Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800 group">
