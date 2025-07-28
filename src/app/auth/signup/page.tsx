@@ -7,6 +7,7 @@ import { Building2, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 // import { toast } from 'sonner';
 import { signUp, SignUpState } from '@/app/lib/actions'
 import { useActionState, useState } from 'react'
+import { useRouter } from 'next/navigation';
 
 
 
@@ -18,6 +19,7 @@ export default function SignupPage() {
   }
   const [showPassword, setShowPassword] = useState(false)
   const [state, formAction] = useActionState(signUp, initalState)
+  const router = useRouter();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
@@ -152,9 +154,7 @@ export default function SignupPage() {
             <div className="mt-6 text-center">
               <button
                 type="button"
-                // onClick={() => {
-                  
-                // }}
+                onClick={() => router.push('/auth/signin')}
                 className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                   Already have an account?
@@ -162,8 +162,8 @@ export default function SignupPage() {
             </div>
 
             
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-sm text-blue-800 dark:text-blue-200 text-center">
+            <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+              <p className="text-sm text-orange-800 dark:text-orange-200 text-center">
                 <strong>Note:</strong> Organization registration requires admin approval.
                 <br />
                 <br />

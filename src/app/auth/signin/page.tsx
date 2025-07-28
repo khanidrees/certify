@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useActionState, useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { signIn, SignInState } from '@/app/lib/actions'
+import { useRouter } from 'next/navigation';
 // import { toast } from 'sonner'
 
 
@@ -17,6 +18,7 @@ const initalState: SignInState = {
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, formAction] = useActionState(signIn, initalState);
+  const router = useRouter();
   
   if(state?.status === 200) {
     window.location.href = '/';
@@ -113,7 +115,7 @@ export default function SignInPage() {
             <div className="mt-6 text-center">
               <button
                 type="submit"
-      
+                onClick={() => router.push('/auth/signup')}
                 className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                 Need an organization account?
