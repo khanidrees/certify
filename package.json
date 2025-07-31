@@ -1,5 +1,5 @@
 {
-  "name": "VerifyCertify",
+  "name": "verifycertify",
   "scripts": {
     "anchor": "cd anchor && anchor",
     "anchor-build": "cd anchor && anchor build",
@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "next lint",
+    "cypress:open": "cypress open",
     "start": "next start"
   },
   "description": "Next.js, Tailwind, @solana/web3.js, Wallet Adapter, Anchor Counter program",
@@ -41,11 +42,13 @@
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "google-auth-library": "^10.2.0",
     "jotai": "^2.12.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.516.0",
     "mongoose": "^8.16.0",
     "next": "15.3.3",
+    "next-auth": "^4.24.11",
     "next-themes": "^0.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -64,6 +67,7 @@
     "@types/node": "^24.0.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "cypress": "^14.5.3",
     "eslint": "^9.29.0",
     "eslint-config-next": "15.3.3",
     "jest": "^30.0.0",

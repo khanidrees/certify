@@ -219,7 +219,7 @@ export default async function Dashboard() {
                 {response?.data?.courses.map((course: PopulatedCourse, index: number) =>{
                   
                   
-                    return(<Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800 group">
+                    return(<Card key={index} className="course-card hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800 group">
                     <CardHeader className="pb-4">
                       <div className="flex items-start justify-between">
                         <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-4">

@@ -35,7 +35,7 @@ const LearnerSchema = z.object({
 
 export type SignUpState = {
   errors?: {
-    OrganizationName?: string[];
+    organizationName?: string[];
     username?: string[];
     password?: string[];
   };
@@ -104,7 +104,7 @@ export async function signUp(prevState: SignUpState, formData: FormData): Promis
     const exists = await User.findOne({ username });
     if (exists){
       console.log('user exists');
-      return { message: 'User exists' , status: 409}
+      return { message: 'Registration failed. Please try again or contact support.' , status: 409}
     };
     const hashed = await bcrypt.hash(password, 10);
     await User.create({ username, password: hashed, role:'organization', organizationName });
@@ -135,7 +135,7 @@ export async function signIn(prevState: SignInState, formData: FormData) {
   try{
     await dbConnect();
     const user: IUser | null = await User.findOne({ username });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await bcrypt.compare(password, user.password!))) {
       return { message: 'Invalid credentials', status: 401 };
     }
     if (user.role === 'organization' && !user.isApproved) {
@@ -155,7 +155,7 @@ export async function signIn(prevState: SignInState, formData: FormData) {
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 7 // 7 days
     })
-
+    
     return { message: 'User logged in', status: 200 };
   }catch(err){
     console.log(err)
@@ -194,7 +194,7 @@ export async function createCourse(prevState : courseCreateState, formData: Form
     await dbConnect();
     await Course.create({ courseName: validatedFields.data.courseName, description: validatedFields.data.description, organizationId: payload.userId });
     revalidatePath('/dashboard');
-    return { message: 'Course added', status: 201  };
+    return { message: 'Course created successfully.', status: 201  };
     
   } catch (error) {
     console.error('Error adding course:', error);
