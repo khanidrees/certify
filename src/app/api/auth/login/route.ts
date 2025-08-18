@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const { username, password }: { username: string; password: string } = await req.json();
   await dbConnect();
   const user: IUser | null = await User.findOne({ username });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user || !(await bcrypt.compare(password, user.password || ''))) {
     return Response.json({ message: 'Invalid credentials' }, { status: 401 });
   }
   if (user.role === 'organization' && !user.isApproved) {

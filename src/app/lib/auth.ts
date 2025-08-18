@@ -2,19 +2,18 @@ import JWT  from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
 const secretKey = process.env.JWT_SECRET!;
-const key = new TextEncoder().encode(secretKey);
 
-export async function encrypt(payload: any) {
+export async function encrypt(payload: { userId: string; role: string }) {
   return await JWT.sign(payload, secretKey, {
     algorithm: 'HS256',
     expiresIn: '24h', // 24 hours
   });
 }
 
-export async function decrypt(input: string): Promise<any> {
+export async function decrypt(input: string) {
   const { payload } = await JWT.verify(input, secretKey, {
     algorithms: ['HS256'],
-  }) as { payload: any };
+  }) as { payload: { userId: string; role: string } };
   return payload;
 }
 
@@ -43,7 +42,8 @@ export async function getSession() {
   
   try {
     return await decrypt(session);
-  } catch (error) {
+  } catch (e) {
+    console.log(e);
     return null;
   }
 }

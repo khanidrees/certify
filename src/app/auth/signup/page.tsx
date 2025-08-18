@@ -11,6 +11,7 @@ import { Building2, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { signUp, SignUpState } from '@/app/lib/actions'
 import { useActionState, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 // Email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -21,7 +22,7 @@ export default function SignupPage() {
     errors: {},
     status: 0
   }
-
+  const [userType, setUserType] = useState<'learner' | 'org'>('org');
   const [showPassword, setShowPassword] = useState(false)
   const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
   const [formValues, setFormValues] = useState({
@@ -72,13 +73,9 @@ export default function SignupPage() {
 
   // Form submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (validate()) {
-      setClientErrors({})
-      // Call your Next.js formAction
-      const target = e.target as HTMLFormElement;
-      const formData = new FormData(target);
-      await formAction(formData);
+    
+    if (!validate()) {
+      e.preventDefault();
     }
   }
 
@@ -108,7 +105,7 @@ export default function SignupPage() {
           </CardHeader>
           <CardContent>
             {/* Disable native validation for custom validation control */}
-            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+            <form onSubmit={handleSubmit} action={formAction} className="space-y-6" noValidate>
               {/* Organization Name */}
               <div className="space-y-2">
                 <label
@@ -210,13 +207,46 @@ export default function SignupPage() {
                   {state.message}
                 </div>
               )}
+              <div className="flex items-center gap-4 mb-4">
+              <span className="text-gray-700 dark:text-gray-300">User Type:</span>
+              <label className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="learner"
+                  checked={userType === 'learner'}
+                  onChange={() => setUserType('learner')}
+                />
+                Learner
+              </label>
+              <label className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="org"
+                  checked={userType === 'org'}
+                  onChange={() => setUserType('org')}
+                />
+                Organization
+              </label>
+            </div>
+
+              {userType === 'learner' && (
+                <p className="text-orange-700 mb-2">
+                  Learners cannot register. Please contact your organization.
+                </p>
+              )}
 
               <button
+                disabled={userType === 'learner'}
                 type="submit"
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Submit Request
               </button>
+              <GoogleSignInButton
+              className='w-full h-12 mt-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-xl shadow-sm flex items-center justify-center gap-2'
+              />
             </form>
 
             {/* Navigation to sign-in */}

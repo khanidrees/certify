@@ -98,3 +98,71 @@ describe('Organization Signup Page', () => {
     cy.url().should('include', '/auth/signin');
   });
 });
+
+describe('User Type Selection and Submit Button', () => {
+  beforeEach(() => {
+    // You can replace this with the URL or mount your component if using cypress-react-unit-test
+    cy.clearAllCookies();
+    cy.visit('/auth/signup');
+  });
+
+  it('Shows "Learner" and "Organization" radio buttons', () => {
+    cy.get('input[type="radio"][name="userType"]').should('have.length', 2);
+    cy.contains('Learner').should('exist');
+    cy.contains('Organization').should('exist');
+  });
+
+  it('Default selection and behavior', () => {
+    // Assuming default userType is 'learner' (if different, adjust)
+    cy.get('input[value="learner"]').should('not.be.checked');
+    cy.get('input[value="org"]').should('be.checked');
+
+    
+
+    
+    cy.get('button[type="submit"]')
+      .should('not.be.disabled');
+  });
+
+  it('Selecting "Organization" enables the submit button and hides the warning', () => {
+    cy.get('input[value="org"]').check({ force: true });
+
+    cy.get('input[value="org"]').should('be.checked');
+    cy.get('input[value="learner"]').should('not.be.checked');
+
+    // The learner warning message should not be visible
+    cy.contains('Learners cannot register. Please contact your organization.').should('not.exist');
+
+    // Submit button should be enabled
+    cy.get('button[type="submit"]').should('not.be.disabled');
+  });
+
+  it('Selecting "Learner" disables the submit button and shows the warning again', () => {
+    // First select org and then learner to test toggling
+    cy.get('input[value="org"]').check({ force: true });
+    cy.get('input[value="learner"]').check({ force: true });
+
+    cy.get('input[value="learner"]').should('be.checked');
+
+    cy.contains('Learners cannot register. Please contact your organization.').should('be.visible');
+
+    cy.get('button[type="submit"]').should('be.disabled');
+  });
+
+  it('Submit button triggers form submission only when enabled', () => {
+    // Stub the form submission or button click handler if possible.
+    // This example assumes you have a form wrapping the button.
+    
+    // Try submit when disabled
+    cy.get('button[type="submit"]').click();
+    // You can assert something that should NOT happen here, like no request sent
+
+    // Select org to enable the button
+    cy.get('input[value="org"]').check({ force: true });
+
+    // Now submit
+    cy.get('button[type="submit"]').click();
+
+    // Here you could check for a form submission side effect or API call if mocked
+  });
+});

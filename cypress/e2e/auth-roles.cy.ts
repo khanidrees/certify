@@ -234,4 +234,43 @@ describe('Authentication and Role-Based Access Control', () => {
 
    
   })
+  describe('User Type Sign In Form', () => {
+    beforeEach(() => {
+      
+      cy.visit('/auth/signin')
+    })
+
+  it('should have "organization" selected by default', () => {
+    // You need to set userType state in your app or ensure learner is default
+    cy.get('input[name="userType"][value="learner"]').should('not.be.checked')
+    cy.get('input[name="userType"][value="org"]').should('be.checked')
+  })
+
+  it('should switch selection when clicking on Learner radio button', () => {
+    cy.get('input[name="userType"][value="learner"]').should('not.to.be.checked')
+    cy.get('input[name="userType"][value="learner"]').click().should('be.checked')
+    cy.get('input[name="userType"][value="org"]').should('not.be.checked')
+  });
+
+  it('should show learner warning text when learner is selected', () => {
+    cy.get('input[name="userType"][value="learner"]').click()
+    cy.contains(
+      'Learners can Sign In Through Credentils Only. Please contact your organization.'
+    )
+      .should('be.visible')
+      .and('have.class', 'text-orange-700');
+    cy.get('button').contains('Sign In with Google').should('not.exist')
+  })
+
+  it('should show GoogleSignInButton when organization is selected', () => {
+    cy.get('input[name="userType"][value="org"]').click()
+    
+    cy.get('button').contains('Sign In with Google')
+      .should('be.visible');
+    // Since GoogleSignInButton is a custom component,
+    // test for its presence by its class or any text it renders if any:
+  })
+
+  
+})
 })

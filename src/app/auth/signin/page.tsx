@@ -11,7 +11,8 @@ import {
 import { useActionState, useEffect, useState } from 'react'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { signIn, SignInState } from '@/app/lib/actions'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 
 const initialState: SignInState = {
@@ -21,6 +22,7 @@ const initialState: SignInState = {
 }
 
 export default function SignInPage() {
+  const [userType, setUserType] = useState<'learner' | 'org'>('org');
   const [showPassword, setShowPassword] = useState(false)
   const [formValues, setFormValues] = useState({
     username: '',
@@ -29,6 +31,8 @@ export default function SignInPage() {
   const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
   const [state, formAction] = useActionState(signIn, initialState)
   const router = useRouter();
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error');
 
   useEffect(() => {
     if(state?.status === 200) {
@@ -175,13 +179,55 @@ export default function SignInPage() {
                   {state.message}
                 </div>
               )}
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200 rounded-lg text-center">
+                  {error === 'not_approved' ? 'Your account is not approved yet.' : 'An error occurred during sign-in.'}
+                  {error === 'oauth_error' && ' Please try again later.'}
+                </div>
+              )}
 
+              <div className="flex items-center gap-4 mb-4">
+              <span className="text-gray-700 dark:text-gray-300">User Type:</span>
+              <label className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="learner"
+                  checked={userType === 'learner'}
+                  onChange={() => setUserType('learner')}
+                />
+                Learner
+              </label>
+              <label className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="org"
+                  checked={userType === 'org'}
+                  onChange={() => setUserType('org')}
+                />
+                Organization
+              </label>
+            </div>
+
+              
               <button
                 type="submit"
                 className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 Sign In
               </button>
+              {userType === 'learner' ? (
+                <p className="text-orange-700 mb-2">
+                  Learners can Sign In Through Credentils Only. Please contact your organization.
+                </p>
+              ) :
+              <GoogleSignInButton
+                callbackUrl="/dashboard" 
+
+                className="w-full h-12 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+              />
+            }
             </form>
 
             {/* Navigation to signup */}

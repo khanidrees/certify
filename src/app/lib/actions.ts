@@ -107,7 +107,7 @@ export async function signUp(prevState: SignUpState, formData: FormData): Promis
       return { message: 'Registration failed. Please try again or contact support.' , status: 409}
     };
     const hashed = await bcrypt.hash(password, 10);
-    await User.create({ username, password: hashed, role:'organization', organizationName });
+    await User.create({ username, password: hashed, role:'organization', organizationName, isApproved: true });
     console.log('user created')
     return { message: 'User created', status: 201 };
   }catch(err){

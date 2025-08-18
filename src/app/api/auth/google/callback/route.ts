@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { OAuth2Client } from 'google-auth-library';
 import { createSession } from '@/app/lib/auth';
 import User from '@/models/User';
+import { dbConnect } from '@/lib/mongodb';
 
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     // Verify the ID token
     const ticket = await client.verifyIdToken({
-      idToken: tokens.id_token!,
+      idToken: tokens.id_token?? '',
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
@@ -36,13 +37,15 @@ export async function GET(request: NextRequest) {
 
     const { email, name, picture, sub: googleId } = payload;
 
+    await dbConnect();
+
     // Check if user exists in your database
     const existingUser = await User.findOne({username: email});
     
     let user;
     if (existingUser) {
       // Link Google account to existing user
-      user = await linkGoogleAccount(existingUser.id, googleId!, email!);
+      user = await linkGoogleAccount(existingUser.id, googleId ?? '', email ?? '');
     } else {
       // Create new user
       user = new User({
@@ -58,22 +61,22 @@ export async function GET(request: NextRequest) {
       await user.save();
       console.log('New user created:', user);
     }
+    if(!user) return;
+    if(user?.isApproved === false) {
+      return NextResponse.redirect(new URL('/auth/signin?error=not_approved', request.url));
+    }
+    
 
     // Create your custom JWT session
-    await createSession(user?._id.toString()!, user?.role!);
+    await createSession(user._id.toString(), user.role);
 
     return NextResponse.redirect(new URL(state, request.url));
   } catch (error) {
     console.error('Google OAuth error:', error);
-    return NextResponse.redirect(new URL('/login?error=oauth_error', request.url));
+    return NextResponse.redirect(new URL('/auth/signin?error=oauth_error', request.url));
   }
 }
 
-// Database helper functions (implement based on your database)
-async function findUserByEmail(email: string) {
-  // Implement your database query to find user by email
-  // Return user object if found, null if not found
-}
 
 async function linkGoogleAccount(userId: string, googleId: string, email: string) {
   // Update existing user record to include Google ID
@@ -83,10 +86,4 @@ async function linkGoogleAccount(userId: string, googleId: string, email: string
     username: email,
     authProvider: 'google',
   }, { new: true });
-}
-
-async function createUser(userData: any) {
-  // Create new user in your database
-  // Return the created user object
-  
 }
