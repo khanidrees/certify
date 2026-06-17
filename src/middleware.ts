@@ -17,8 +17,6 @@ export function middleware(request: NextRequest) {
   // token and role is present
 
   const userRole = request.cookies.get('role')?.value;
-  console.log(userRole);
-  console.log(request.nextUrl.pathname);
 
   // If the cookie exists and the user is on the login page, redirect to the home page.
   if (request.nextUrl.pathname.includes('/auth') ) {

@@ -9,7 +9,6 @@ import { Suspense } from 'react'
 const LearnersDashboard = async() => {
   const response = await fetchLearner();
   const { data } = response;
-  console.log(data?.user?._id);
   return (
     <Suspense fallback={<LoadingPage />}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -43,10 +42,10 @@ const LearnersDashboard = async() => {
                 <div className="bg-white/10 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Award className="h-5 w-5" />
-                    <span className="font-medium">Certificates Earned</span>
+                    <span className="font-medium">Account Status</span>
                   </div>
-                  <p className="text-blue-100 text-2xl font-bold">
-                    {/* {certificates.data?.length || 0} */}
+                  <p className="text-blue-100">
+                    Active
                   </p>
                 </div>
               </div>
