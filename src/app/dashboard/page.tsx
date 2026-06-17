@@ -53,7 +53,7 @@ export default async function Dashboard() {
   const stats: DashboardStats = {
     totalCourses: response?.data?.courses?.length || 0,
     totalLearners,
-    totalCertificatesIssued: Math.floor(totalLearners * 0.8), // Assuming 80% completion rate
+    totalCertificatesIssued: totalLearners, // In our flow, each learner enrolled represents an issued certificate record
     recentActivity: response?.data?.courses?.filter((course: PopulatedCourse) => {
       const courseDate = new Date(course.createdAt)
       const weekAgo = new Date()
@@ -61,47 +61,6 @@ export default async function Dashboard() {
       return courseDate > weekAgo
     }).length || 0
   }
-
-  // useEffect(() => {
-    
-
-  //   fetch('/api/organization/dashboard', {
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   })
-  //     .then(res => res.json())
-  //     .then(d => {
-  //       const coursesData = d.courses || []
-  //       setCourses(coursesData)
-        
-  //       // Calculate stats
-  //       const totalLearners = coursesData.reduce((acc: number, course: Course) => 
-  //         acc + (course.learners?.length || 0), 0
-  //       )
-        
-  //       setStats({
-  //         totalCourses: coursesData.length,
-  //         totalLearners,
-  //         totalCertificatesIssued: Math.floor(totalLearners * 0.8), // Assuming 80% completion rate
-  //         recentActivity: coursesData.filter((course: Course) => {
-  //           const courseDate = new Date(course.createdAt)
-  //           const weekAgo = new Date()
-  //           weekAgo.setDate(weekAgo.getDate() - 7)
-  //           return courseDate > weekAgo
-  //         }).length
-  //       })
-        
-  //       setIsLoading(false)
-  //     })
-  //     .catch(() => setIsLoading(false))
-  // }, [])
-
-  
-
-  
-
-  // if (isLoading) {
-  //   return <LoadingPage />
-  // }
 
   return (
     <Suspense fallback={<LoadingPage />}>
@@ -259,16 +218,14 @@ export default async function Dashboard() {
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-600 dark:text-gray-400">Course Progress</span>
                             <span className="font-medium text-gray-900 dark:text-white">
-                              {course.learners?.length ? Math.floor((course.learners.length * 0.8)) : 0}/{course.learners?.length || 0}
+                              {course.learners?.length || 0}/{course.learners?.length || 0}
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
                               className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
                               style={{ 
-                                width: course.learners?.length 
-                                  ? `${Math.min((course.learners.length * 0.8 / course.learners.length) * 100, 100)}%` 
-                                  : '0%' 
+                                width: course.learners?.length ? '100%' : '0%' 
                               }}
                             ></div>
                           </div>
@@ -313,36 +270,6 @@ export default async function Dashboard() {
               </div>
             )}
           </div>
-
-          {/* Quick Actions Section */}
-          {/* {Array.isArray(response?.data?.courses) && response?.data?.courses.length > 0 && (
-            <div className="mt-12">
-              <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                <CardContent className="p-8">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="text-center md:text-left">
-                      <h3 className="text-2xl font-bold mb-2">Ready to Issue Certificates?</h3>
-                      <p className="text-blue-100 text-lg">
-                        Connect your wallet and start issuing blockchain-verified certificates to your learners.
-                      </p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <Link href="/account">
-                        <Button variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3">
-                          <Target className="h-4 w-4 mr-2" />
-                          Connect Wallet
-                        </Button>
-                      </Link>
-                      <Button variant="secondary" className="border-white text-blue-400 hover:bg-white/10 px-6 py-3">
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        View Guide
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )} */}
         </div>
       </div>
     </Suspense>

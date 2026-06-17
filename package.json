@@ -14,16 +14,18 @@
     "cypress:open": "cypress open",
     "start": "next start"
   },
-  "description": "Next.js, Tailwind, @solana/web3.js, Wallet Adapter, Anchor Counter program",
+  "description": "Next.js, Tailwind CSS, Solana, Web3.js, Wallet Adapter, and Anchor certificate verification system",
   "keywords": [
-    "anchor-counter",
-    "legacy",
+    "solana",
+    "anchor",
     "nextjs",
     "react",
     "solana-web3js",
     "tailwind",
     "typescript",
-    "wallet-adapter"
+    "wallet-adapter",
+    "certification",
+    "verification"
   ],
   "version": "0.0.0",
   "private": true,
