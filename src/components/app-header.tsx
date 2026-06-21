@@ -2,8 +2,7 @@
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Menu, X, LogOut, User, Settings, Shield, Building2, GraduationCap, Bell } from 'lucide-react'
+import { LogOut, User, Settings, Shield, Building2, GraduationCap } from 'lucide-react'
 import { ThemeSelect } from '@/components/theme-select'
 import { ClusterUiSelect } from './cluster/cluster-ui'
 import { WalletButton } from '@/components/solana/solana-provider'
@@ -14,48 +13,22 @@ import { signOut } from '@/app/lib/actions'
 export function AppHeader({ links = [], role }: { links: { label: string; path: string }[], role: UserRole | null }) {
   const pathname = usePathname()
   const [showMenu, setShowMenu] = useState(false)
-  
 
-  
+
+
 
   function isActive(path: string) {
     return path === '/' ? pathname === '/' : pathname.startsWith(path)
   }
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     await signOut();
     window.location.href = '/auth/signin';
   }
 
-  const getRoleIcon = (userRole: string) => {
-    switch (userRole) {
-      case 'admin':
-        return <Shield className="h-4 w-4" />
-      case 'organization':
-        return <Building2 className="h-4 w-4" />
-      case 'learner':
-        return <GraduationCap className="h-4 w-4" />
-      default:
-        return <User className="h-4 w-4" />
-    }
-  }
-
-  const getRoleColor = (userRole: string) => {
-    switch (userRole) {
-      case 'admin':
-        return 'text-red-600 dark:text-red-400'
-      case 'organization':
-        return 'text-blue-600 dark:text-blue-400'
-      case 'learner':
-        return 'text-green-600 dark:text-green-400'
-      default:
-        return 'text-gray-600 dark:text-gray-400'
-    }
-  }
-
   const getNavigationLinks = () => {
     if (!role) return []
-    
+
     switch (role) {
       case 'admin':
         return [
@@ -83,52 +56,40 @@ export function AppHeader({ links = [], role }: { links: { label: string; path: 
 
   if (!role) {
     return (
-      <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 dark:bg-gray-900/95 dark:supports-[backdrop-filter]:bg-gray-900/80">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center space-x-4">
-            <Link className="flex items-center space-x-3 group" href="/">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                <span className="text-white font-bold text-lg">VC</span>
-              </div>
-              <div className="hidden sm:block">
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  VerifyCertify
-                </span>
-                <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
-                  Blockchain Certificates
-                </p>
-              </div>
+      <header className="fixed top-0 w-full bg-surface/70 backdrop-blur-md border-b border-white/10 shadow-sm z-50">
+        <div className="flex justify-between items-center h-16 px-md max-w-container-max mx-auto">
+          <Link href="/" className="font-headline-md text-headline-md font-bold text-on-surface">
+            VerifyCertify
+          </Link>
+          <div className="hidden md:flex items-center space-x-6">
+            <Link
+              href="/#features"
+              className={`font-body-md text-body-md transition-colors ${isActive('/#features') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary'
+                }`}
+            >
+              Features
+            </Link>
+            <Link
+              href="/#how-it-works"
+              className={`font-body-md text-body-md transition-colors ${isActive('/#how-it-works') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary'
+                }`}
+            >
+              How It Works
+            </Link>
+            <Link
+              href="/public/course/demo/learner/demo"
+              className={`font-body-md text-body-md transition-colors ${isActive('/public/course/demo/learner/demo') ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-primary'
+                }`}
+            >
+              Demo
             </Link>
           </div>
-          
           <div className="flex items-center space-x-4">
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link
-                href="/#features"
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                Features
-              </Link>
-              <Link
-                href="/#how-it-works"
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                How It Works
-              </Link>
-              <Link
-                href="/public/course/demo/learner/demo"
-                className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                Demo
-              </Link>
-            </nav>
-            
             <ThemeSelect />
-            
             <Link href="/auth/signin">
-              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6">
-                Sign In
-              </Button>
+              <button className="bg-primary text-on-primary font-label-caps text-label-caps px-md py-xs rounded-full active:opacity-80 transition-all hover:scale-105">
+                Sign in
+              </button>
             </Link>
           </div>
         </div>
@@ -137,248 +98,132 @@ export function AppHeader({ links = [], role }: { links: { label: string; path: 
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 dark:bg-gray-900/95 dark:supports-[backdrop-filter]:bg-gray-900/80">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center space-x-8">
-          <Link className="flex items-center space-x-3 group" href="/">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-              <span className="text-white font-bold text-lg">VC</span>
+    <header className="sticky top-0 z-40 bg-surface/50 backdrop-blur-lg border-b border-outline-variant/30 flex justify-between items-center w-full px-md py-base transition-all duration-300">
+      <div className="flex items-center gap-base">
+        <button className="lg:hidden text-on-surface" onClick={() => setShowMenu(!showMenu)}>
+          <span className="material-symbols-outlined">menu</span>
+        </button>
+        <Link href="/" className="font-headline-md text-headline-md font-bold text-on-surface">
+          VerifyCertify
+        </Link>
+        <div className="hidden lg:flex items-center space-x-md ml-lg">
+          {navigationLinks.map(({ label, path }) => (
+            <Link
+              key={path}
+              className={`font-body-md text-body-md transition-colors ${isActive(path) ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-primary'
+                }`}
+              href={path}
+            >
+              {label}
+            </Link>
+          ))}
+          {links.map(({ label, path }) => (
+            <Link
+              key={path}
+              className={`font-body-md text-body-md transition-colors ${isActive(path) ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-primary'
+                }`}
+              href={path}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Actions */}
+      <div className="hidden lg:flex items-center gap-md">
+        <div className="flex items-center gap-xs px-sm py-1 bg-surface-container-high rounded-full border border-outline-variant/30">
+          <div className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#4edea3]"></div>
+          <span className="font-label-caps text-[10px] text-secondary">Devnet Active</span>
+        </div>
+
+        {role === 'organization' && (
+          <div className="flex items-center gap-sm">
+            <WalletButton />
+          </div>
+        )}
+
+        {process.env.NODE_ENV !== 'production' && (
+          <ClusterUiSelect />
+        )}
+
+        <ThemeSelect />
+
+        {/* User profile dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-bright rounded-full">
+              <span className="material-symbols-outlined">account_circle</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 glass-surface border border-white/10 text-on-surface">
+            <div className="px-3 py-2 border-b border-white/5">
+              <p className="text-sm font-bold capitalize">{role} Account</p>
+              <p className="text-[10px] text-on-surface-variant font-label-caps">Manage profile</p>
             </div>
-            <div className="hidden sm:block">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                VerifyCertify
-              </span>
-              <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
-                Blockchain Certificates
-              </p>
-            </div>
-          </Link>
-          
-          <nav className="hidden lg:flex items-center space-x-6">
-            {navigationLinks.map(({ label, path, icon }) => (
+            <DropdownMenuItem className="flex items-center space-x-2 hover:bg-white/5 cursor-pointer">
+              <User className="h-4 w-4 text-primary" />
+              <span>Profile Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex items-center space-x-2 hover:bg-white/5 cursor-pointer">
+              <Settings className="h-4 w-4 text-primary" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-white/5" />
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="flex items-center space-x-2 text-red-400 focus:text-red-400 hover:bg-white/5 cursor-pointer"
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sign Out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {showMenu && (
+        <div className="lg:hidden absolute top-16 left-0 right-0 bg-surface-container border-b border-outline-variant/30 shadow-lg z-50 p-md space-y-md">
+          <nav className="flex flex-col space-y-md">
+            {navigationLinks.map(({ label, path }) => (
               <Link
                 key={path}
-                className={`flex items-center gap-2 text-sm font-medium transition-all duration-200 px-3 py-2 rounded-lg ${
-                  isActive(path) 
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                    : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-                }`}
+                className={`font-body-md text-body-md transition-colors ${isActive(path) ? 'text-primary font-bold' : 'text-on-surface-variant'
+                  }`}
                 href={path}
+                onClick={() => setShowMenu(false)}
               >
-                {icon}
                 {label}
               </Link>
             ))}
-            
-            {/* Additional navigation from props */}
             {links.map(({ label, path }) => (
               <Link
                 key={path}
-                className={`text-sm font-medium transition-all duration-200 px-3 py-2 rounded-lg ${
-                  isActive(path) 
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                    : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-                }`}
+                className={`font-body-md text-body-md transition-colors ${isActive(path) ? 'text-primary font-bold' : 'text-on-surface-variant'
+                  }`}
                 href={path}
+                onClick={() => setShowMenu(false)}
               >
                 {label}
               </Link>
             ))}
           </nav>
-        </div>
-
-        {/* Mobile menu button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden"
-          onClick={() => setShowMenu(!showMenu)}
-        >
-          {showMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
-
-        {/* Desktop actions */}
-        <div className="hidden lg:flex items-center space-x-4">
-          {role === 'organization' && (
-            <div className="flex items-center space-x-3">
-              <WalletButton />
-              <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
-            </div>
-          )}
-          {process.env.NODE_ENV !== 'production' && (
-            <ClusterUiSelect />
-          )} 
-          
-          <ThemeSelect />
-          
-          {/* Notifications */}
-          {/* <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs"></span>
-          </Button> */}
-          
-          {/* User menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center space-x-2 px-3 py-2 h-10">
-                <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${
-                  role === 'admin' ? 'from-red-500 to-red-600' :
-                  role === 'organization' ? 'from-blue-500 to-blue-600' :
-                  'from-green-500 to-green-600'
-                } flex items-center justify-center text-white text-sm font-medium`}>
-                  {getRoleIcon(role || '')}
-                </div>
-                <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">
-                    {role} Account
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Manage your account
-                  </p>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
-                <div className="flex items-center space-x-2">
-                  <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${
-                    role === 'admin' ? 'from-red-500 to-red-600' :
-                    role === 'organization' ? 'from-blue-500 to-blue-600' :
-                    'from-green-500 to-green-600'
-                  } flex items-center justify-center text-white text-sm`}>
-                    {getRoleIcon(role || '')}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">
-                      {role} Account
-                    </p>
-                    <p className={`text-xs ${getRoleColor(role || '')}`}>
-                      {role === 'admin' ? 'System Administrator' :
-                       role === 'organization' ? 'Organization Manager' :
-                       'Student Account'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <DropdownMenuItem className="flex items-center space-x-2">
-                <User className="h-4 w-4" />
-                <span>Profile Settings</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem className="flex items-center space-x-2">
-                <Settings className="h-4 w-4" />
-                <span>Account Settings</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-              
-              <DropdownMenuItem 
-                onClick={handleLogout} 
-                className="flex items-center space-x-2 text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400"
+          <div className="flex flex-col gap-sm pt-md border-t border-white/5">
+            {role === 'organization' && <WalletButton />}
+            <div className="flex justify-between items-center">
+              <ClusterUiSelect />
+              <ThemeSelect />
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-xs text-red-400 hover:text-red-300 font-bold"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        {/* Mobile menu */}
-        {showMenu && (
-          <div className="lg:hidden absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg">
-            <div className="flex flex-col p-4 space-y-4">
-              {/* Mobile navigation */}
-              <nav className="flex flex-col space-y-2">
-                {navigationLinks.map(({ label, path, icon }) => (
-                  <Link
-                    key={path}
-                    className={`flex items-center gap-3 text-sm font-medium transition-colors px-3 py-2 rounded-lg ${
-                      isActive(path) 
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                        : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                    }`}
-                    href={path}
-                    onClick={() => setShowMenu(false)}
-                  >
-                    {icon}
-                    {label}
-                  </Link>
-                ))}
-                
-                {links.map(({ label, path }) => (
-                  <Link
-                    key={path}
-                    className={`text-sm font-medium transition-colors px-3 py-2 rounded-lg ${
-                      isActive(path) 
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                        : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                    }`}
-                    href={path}
-                    onClick={() => setShowMenu(false)}
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-              
-              {/* Mobile actions */}
-              <div className="flex flex-col space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                {role === 'organization' && (
-                  <div className="space-y-3">
-                    <WalletButton />
-                    <div className="h-px bg-gray-200 dark:bg-gray-700"></div>
-                  </div>
-                )}
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <ClusterUiSelect />
-                    <ThemeSelect />
-                  </div>
-                  
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-                  </Button>
-                </div>
-                
-                {/* Mobile user info */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${
-                      role === 'admin' ? 'from-red-500 to-red-600' :
-                      role === 'organization' ? 'from-blue-500 to-blue-600' :
-                      'from-green-500 to-green-600'
-                    } flex items-center justify-center text-white`}>
-                      {getRoleIcon(role || '')}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white capitalize">
-                        {role} Account
-                      </p>
-                      <p className={`text-xs ${getRoleColor(role || '')}`}>
-                        {role === 'admin' ? 'System Administrator' :
-                         role === 'organization' ? 'Organization Manager' :
-                         'Student Account'}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleLogout}
-                    className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   )
 }

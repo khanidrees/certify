@@ -1,35 +1,43 @@
 import { fetchAdminDashBoard } from '@/app/lib/data'
-import ApproveBtn from '@/components/dashboard/ApproveBtn';
-import mongoose from 'mongoose'
+import AdminDashboardClient from '@/components/dashboard/AdminDashboardClient'
 
-
-
-const AdminDashboard = async() => {
-  const response = await fetchAdminDashBoard();
+export default async function AdminDashboard() {
+  const response = await fetchAdminDashBoard()
   
+  // Serialize Mongoose Objects safely for Client Component consumption
+  const serializedUsers = (response?.data?.users || []).map((user: { _id: { toString(): string }; username: string; organizationName?: string; isApproved: boolean; createdAt?: Date }) => ({
+    _id: user._id.toString(),
+    username: user.username,
+    organizationName: user.organizationName || '',
+    isApproved: user.isApproved,
+    createdAt: user.createdAt instanceof Date ? user.createdAt.toISOString() : undefined
+  }))
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen ">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-      <p className="text-lg">This is the admin dashboard where you can manage users and settings.</p>
-      <div className="mt-8 w-full max-w-2xl  shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4">User Management</h2>
-        <p className="text-gray-600 mb-4">Here you can view and manage all organization users.</p>
-        {/* Placeholder for user list */}
-        {Array.isArray(response?.data?.users) && response?.data?.users.length !== 0 ? 
-          response?.data?.users.map((user :{_id: mongoose.Types.ObjectId, username: string, organizationName?: string|undefined, isApproved: boolean }) => (
-            <div key={user._id.toString()} className="flex justify-between items-center p-4 mb-2  rounded-lg shadow-sm">
-              <span>{user.username} ({user.organizationName})</span>
-              <div>
-                <ApproveBtn user={user} />
-              </div>
+    <div className="min-h-screen bg-surface-dim text-on-surface font-body-md overflow-x-hidden relative">
+      <main className="max-w-container-max mx-auto p-lg relative pt-24">
+        {/* Header */}
+        <header className="flex justify-between items-center mb-xl">
+          <div>
+            <h2 className="font-display-lg text-3xl font-bold text-on-surface">Admin Dashboard</h2>
+            <p className="text-on-surface-variant text-sm mt-xs">Managing global network entities and security protocols.</p>
+          </div>
+          <div className="flex items-center space-x-md">
+            <button className="p-2 bg-surface-container hover:bg-surface-variant rounded-full transition-colors relative">
+              <span className="material-symbols-outlined text-on-surface-variant block text-xl">notifications</span>
+              <span className="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span>
+            </button>
+            <div className="h-8 w-[1px] bg-outline-variant/30"></div>
+            <div className="flex items-center space-x-2">
+              <span className="text-on-surface-variant text-xs font-semibold tracking-wider font-label-caps">LAST SYNC:</span>
+              <span className="text-secondary font-bold text-xs font-label-caps uppercase tracking-wider">Just now</span>
             </div>
-          )) : 
-          <p className="text-gray-500">No users found.</p>
-        }
-        
-      </div>
+          </div>
+        </header>
+
+        {/* Client Interactive Dashboard */}
+        <AdminDashboardClient initialUsers={serializedUsers} />
+      </main>
     </div>
   )
 }
-
-export default AdminDashboard

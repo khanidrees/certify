@@ -1,21 +1,6 @@
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {  LoadingPage } from '@/components/ui/loading-spinner'
+import { LoadingPage } from '@/components/ui/loading-spinner'
 import Link from 'next/link'
-import {  
-  Users, 
-  BookOpen, 
-  Calendar, 
-  ExternalLink, 
-  Award,
-  TrendingUp,
-  BarChart3,
-  Clock,
-  Building2,
-  GraduationCap,
-  Activity
-} from 'lucide-react'
 import CreateCourseModal from '@/components/modals/CreateCourseModal'
 import AddLearnerModal from '@/components/modals/AddLearnerModal'
 import { fetchDashboardData } from '../lib/data'
@@ -64,212 +49,130 @@ export default async function Dashboard() {
 
   return (
     <Suspense fallback={<LoadingPage />}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto p-6">
-          {/* Header Section */}
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                    <Building2 className="h-8 w-8" />
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold mb-2">Organization Dashboard</h1>
-                    <p className="text-blue-100 text-lg">
-                      Manage your courses, learners, and certificates with ease
-                    </p>
-                  </div>
-                </div>
-                
-                <CreateCourseModal/>
+      <div className="min-h-screen bg-surface text-on-surface font-body-md overflow-x-hidden relative pt-20">
+        <div className="max-w-container-max mx-auto p-md md:p-lg space-y-lg">
+          {/* Dashboard Header & Actions */}
+          <section className="flex flex-col md:flex-row md:items-end justify-between gap-md border-b border-white/5 pb-lg">
+            <div className="space-y-xs">
+              <h1 className="font-display-lg text-3xl md:text-5xl font-bold text-gradient">Organization Dashboard</h1>
+              <p className="text-on-surface-variant max-w-2xl font-body-lg">
+                Manage your academic infrastructure, track student progress across the Solana network, and issue high-fidelity verifiable credentials.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-sm">
+              <CreateCourseModal />
+            </div>
+          </section>
+
+          {/* Metrics Grid */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+            <div className="glass-surface p-md rounded-xl space-y-md">
+              <div className="flex justify-between items-start">
+                <span className="p-sm bg-primary/10 text-primary rounded-lg">
+                  <span className="material-symbols-outlined">school</span>
+                </span>
+                <span className="text-secondary font-label-caps">Total</span>
+              </div>
+              <div>
+                <p className="font-label-caps text-on-surface-variant text-xs">Total Courses</p>
+                <h3 className="text-2xl font-bold font-headline-md">{stats.totalCourses}</h3>
               </div>
             </div>
-          </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card className="border-0 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Courses</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCourses}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                    <BookOpen className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-green-600 dark:text-green-400">Active courses</span>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="glass-surface p-md rounded-xl space-y-md">
+              <div className="flex justify-between items-start">
+                <span className="p-sm bg-tertiary/10 text-tertiary rounded-lg">
+                  <span className="material-symbols-outlined">group</span>
+                </span>
+                <span className="text-secondary font-label-caps">Active</span>
+              </div>
+              <div>
+                <p className="font-label-caps text-on-surface-variant text-xs">Active Students</p>
+                <h3 className="text-2xl font-bold font-headline-md">{stats.totalLearners}</h3>
+              </div>
+            </div>
 
-            <Card className="border-0 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Learners</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalLearners}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                    <Users className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <Activity className="h-4 w-4 text-blue-500 mr-1" />
-                  <span className="text-blue-600 dark:text-blue-400">Enrolled students</span>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="glass-surface p-md rounded-xl space-y-md">
+              <div className="flex justify-between items-start">
+                <span className="p-sm bg-secondary/10 text-secondary rounded-lg">
+                  <span className="material-symbols-outlined">verified</span>
+                </span>
+                <span className="text-on-surface-variant font-label-caps">On-chain</span>
+              </div>
+              <div>
+                <p className="font-label-caps text-on-surface-variant text-xs">Certificates Issued</p>
+                <h3 className="text-2xl font-bold font-headline-md">{stats.totalCertificatesIssued}</h3>
+              </div>
+            </div>
 
-            <Card className="border-0 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Certificates Issued</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalCertificatesIssued}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                    <Award className="h-6 w-6 text-purple-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <GraduationCap className="h-4 w-4 text-purple-500 mr-1" />
-                  <span className="text-purple-600 dark:text-purple-400">Completed courses</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-sm bg-white dark:bg-gray-800 hover:shadow-md transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Recent Activity</p>
-                    <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.recentActivity}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                    <BarChart3 className="h-6 w-6 text-orange-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <Clock className="h-4 w-4 text-orange-500 mr-1" />
-                  <span className="text-orange-600 dark:text-orange-400">This week</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            <div className="glass-surface p-md rounded-xl space-y-md relative overflow-hidden">
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 blur-3xl rounded-full"></div>
+              <div className="flex justify-between items-start">
+                <span className="p-sm bg-surface-container-high border border-outline-variant/30 text-primary rounded-lg">
+                  <span className="material-symbols-outlined">explore</span>
+                </span>
+                <span className="text-on-surface-variant font-label-caps">This Week</span>
+              </div>
+              <div>
+                <p className="font-label-caps text-on-surface-variant text-xs">Recent Activity</p>
+                <h3 className="text-2xl font-bold font-headline-md">{stats.recentActivity}</h3>
+              </div>
+            </div>
+          </section>
 
           {/* Courses Section */}
-          <div className="space-y-6">
+          <section className="space-y-md">
             <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Courses</h2>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  Manage your courses and track learner progress
-                </p>
-              </div>
+              <h2 className="font-title-sm text-lg font-bold text-on-surface">Your Programs &amp; Courses</h2>
             </div>
 
             {Array.isArray(response?.data?.courses) && response?.data?.courses.length !== 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {response?.data?.courses.map((course: PopulatedCourse, index: number) =>{
-                  
-                  
-                    return(<Card key={index} className="course-card hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800 group">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-4">
-                          <BookOpen className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-full">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-xs font-medium text-green-700 dark:text-green-300">Active</span>
-                        </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+                {response?.data?.courses.map((course: PopulatedCourse, index: number) => (
+                  <div key={index} className="glass-surface p-md rounded-xl space-y-md flex flex-col justify-between group hover:scale-[1.02] transition-transform duration-300">
+                    <div className="space-y-sm">
+                      <div className="flex justify-between items-start">
+                        <span className="p-sm bg-primary/10 text-primary rounded-lg">
+                          <span className="material-symbols-outlined">book</span>
+                        </span>
+                        <span className="text-[10px] bg-secondary/10 text-secondary border border-secondary/20 px-sm py-xs rounded uppercase font-semibold">Active</span>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 transition-colors">
-                          {course.courseName}
-                        </CardTitle>
-                        <CardDescription className="text-gray-600 dark:text-gray-400 line-clamp-3">
-                          {course.description}
-                        </CardDescription>
-                      </div>
-                      
-                      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {new Date(course.createdAt).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          {course.learners?.length || 0} learners
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="pt-0">
-                      <div className="flex flex-col gap-3">
-                        {/* Progress Bar */}
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600 dark:text-gray-400">Course Progress</span>
-                            <span className="font-medium text-gray-900 dark:text-white">
-                              {course.learners?.length || 0}/{course.learners?.length || 0}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div 
-                              className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
-                              style={{ 
-                                width: course.learners?.length ? '100%' : '0%' 
-                              }}
-                            ></div>
-                          </div>
-                        </div>
+                      <h3 className="font-title-sm text-lg font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-1">{course.courseName}</h3>
+                      <p className="text-on-surface-variant text-xs line-clamp-3 leading-relaxed">{course.description}</p>
+                    </div>
 
-                        <div className="flex gap-2">
-                          <AddLearnerModal courseId={course._id.toString()} />
-                          
-                          <Link
-                            href={`/organization/courses/${course._id.toString()}`}
-                            className="flex-1"
-                          >
-                            <Button 
-                              variant="outline" 
-                              className="w-full h-10 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-blue-300 dark:hover:border-blue-600 transition-all"
-                            >
-                              <ExternalLink className="h-4 w-4 mr-2" />
-                              Manage
-                            </Button>
-                          </Link>
-                        </div>
+                    <div className="space-y-md pt-md border-t border-white/5">
+                      <div className="flex justify-between items-center text-xs text-on-surface-variant">
+                        <span>Created: {new Date(course.createdAt).toLocaleDateString()}</span>
+                        <span>{course.learners?.length || 0} Learners</span>
                       </div>
-                    </CardContent>
-                  </Card>)
-                
-                }
-              )}
+                      <div className="flex gap-sm">
+                        <AddLearnerModal courseId={course._id.toString()} />
+                        <Link href={`/organization/courses/${course._id.toString()}`} className="flex-1">
+                          <button className="w-full h-10 glass-surface hover:bg-white/10 text-on-surface text-xs font-bold rounded-lg border border-white/5 transition-all">
+                            Manage
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              
             ) : (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <BookOpen className="h-12 w-12 text-gray-400" />
+              <div className="text-center py-16 glass-surface rounded-xl">
+                <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="material-symbols-outlined text-4xl text-on-surface-variant/40">book</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  No courses yet
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                <h3 className="text-xl font-bold text-on-surface mb-2">No courses yet</h3>
+                <p className="text-xs text-on-surface-variant mb-6 max-w-md mx-auto">
                   Get started by creating your first course. You can then add learners and issue certificates.
                 </p>
-                <CreateCourseModal/>
+                <div className="flex justify-center">
+                  <CreateCourseModal />
+                </div>
               </div>
             )}
-          </div>
+          </section>
         </div>
       </div>
     </Suspense>

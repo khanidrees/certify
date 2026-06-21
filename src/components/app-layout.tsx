@@ -8,6 +8,8 @@ import { ClusterChecker } from '@/components/cluster/cluster-ui'
 import { AccountChecker } from '@/components/account/account-ui'
 import { UserRole } from '@/models/User'
 
+import { usePathname } from 'next/navigation'
+
 export function AppLayout({
   children,
   links,
@@ -17,10 +19,13 @@ export function AppLayout({
   links: { label: string; path: string }[]
   role: UserRole | null
 }) {
+  const pathname = usePathname()
+  const isAuthPage = pathname?.startsWith('/auth/')
+
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <div className="flex flex-col min-h-screen">
-        <AppHeader links={links} role={role} />
+        {!isAuthPage && <AppHeader links={links} role={role} />}
         <main className="flex-grow">
           <ClusterChecker>
             <AccountChecker />

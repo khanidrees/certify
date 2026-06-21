@@ -1,76 +1,119 @@
-// POst a learner
 import { NextResponse } from 'next/server';
-import { dbConnect } from '@/lib/mongodb';
-import Course  from '@/models/Course';
-import jwt from 'jsonwebtoken';
-import User, { IUser } from '@/models/User';
 import { NextRequest } from 'next/server';
+import { dbConnect } from '@/lib/mongodb';
+import Course from '@/models/Course';
+import User, { IUser } from '@/models/User';
 import bcrypt from 'bcrypt';
-const JWT_SECRET = process.env.JWT_SECRET as string;
-export async function POST(req: NextRequest ) {
-  const courseId =  req.nextUrl.searchParams.get('courseId') as string;
-  const auth = req.headers.get('authorization');
-  if (!auth) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  
-  const token = auth.split(' ')[1];
+import crypto from 'crypto';
+import { z } from 'zod';
+import { AuthError, verifyRole } from '@/lib/auth';
+import {
+  created,
+  badRequest,
+  unauthorized,
+  notFound,
+  internalError,
+} from '@/lib/apiResponse';
+import { logger } from '@/lib/logger';
+
+const addLearnerSchema = z.object({
+  username: z.string().email('Learner username must be a valid email address'),
+  learnerName: z.string().min(2, 'Learner name must be at least 2 characters'),
+});
+
+export async function POST(req: NextRequest) {
+  const start = logger.startRequest('/api/organization/courses/[courseId]/learners', 'POST');
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
-    if (payload.role !== 'organization') return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
-    
+    const payload = verifyRole(req, 'organization');
+
+    const courseId = req.nextUrl.searchParams.get('courseId');
+    if (!courseId) {
+      logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', 400);
+      return badRequest({ message: 'courseId query parameter is required' });
+    }
+
+    const body = await req.json();
+    const parsed = addLearnerSchema.safeParse(body);
+    if (!parsed.success) {
+      logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', 400);
+      return badRequest({ message: parsed.error.errors[0].message });
+    }
+
+    const { username, learnerName } = parsed.data;
+
     await dbConnect();
-    const course = await Course.findOne({ _id: courseId, organizationId: payload.userId })
-    .populate('learners', 'username learnerName role');
-    if (!course) return NextResponse.json({ message: 'Course not found' }, { status: 404 });
-    
-    const { username, learnerName }: { username: string; learnerName: string } = await req.json();
-    if (!username || !learnerName) {
-      return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
-    }
-    //validate username as email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(username)) {
-      return NextResponse.json({ message: 'Invalid email format' }, { status: 400 });
-    }
-    
-    const existingUser:IUser | null = await User.findOne({ username });
-    
-    if (!existingUser) {
-      const hashedPassword = await bcrypt.hash('Password123', 10); // Default password, change as needed
-      const newUser = await User.create({
-      username,
-      learnerName,
-      role: 'learner',
-      courseId: course._id,
+    const course = await Course.findOne({
+      _id: courseId,
       organizationId: payload.userId,
-      password: hashedPassword
-      });
-      if(!newUser) {
-        return NextResponse.json({ message: 'Failed to create learner' }, { status: 500 });
-      }
-      //update course with new learner
-      const res = await Course.findOneAndUpdate(
-      { _id: course._id },
-      { $addToSet: { learners: newUser._id } },
-      
-      );
-      return NextResponse.json({ message: 'Learner added successfully', user: newUser, course: res}, { status: 201 });
-    
-    }else{
-      const res = await Course.findOneAndUpdate(
-        { _id: course._id },
-        { $addToSet: { learners: existingUser._id } },
-        )
-        console.log(res);
-        return NextResponse.json({ message: 'Learner added successfully', user: existingUser, course }, { status: 201 });
+    }).populate('learners', 'username learnerName role');
+
+    if (!course) {
+      logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', 404);
+      return notFound({ message: 'Course not found or does not belong to your organization' });
     }
 
-    
+    const existingUser: IUser | null = await User.findOne({ username });
 
-     
-    
-    
+    if (!existingUser) {
+      // Generate a predictable temporary password (Option B: Name + @ + email prefix)
+      const tempPassword = `${learnerName.replace(/\s+/g, '')}@${username.split('@')[0]}`;
+      const hashedPassword = await bcrypt.hash(tempPassword, 12);
+
+      const newUser = await User.create({
+        username,
+        learnerName,
+        role: 'learner',
+        password: hashedPassword,
+      });
+
+      await Course.findByIdAndUpdate(course._id, {
+        $addToSet: { learners: newUser._id },
+      });
+
+      logger.info('New learner created and enrolled', {
+        learnerId: String(newUser._id),
+        courseId,
+        orgId: payload.userId,
+      });
+      logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', 201);
+      return created({
+        message: 'Learner created and enrolled successfully',
+        data: { user: { _id: newUser._id, username, learnerName }, courseId, tempPassword },
+      });
+    } else {
+      // Learner already exists — just enroll them
+      await Course.findByIdAndUpdate(course._id, {
+        $addToSet: { learners: existingUser._id },
+      });
+
+      logger.info('Existing learner enrolled', {
+        learnerId: String(existingUser._id),
+        courseId,
+        orgId: payload.userId,
+      });
+      logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', 201);
+      return created({
+        message: 'Learner enrolled successfully',
+        data: {
+          user: {
+            _id: existingUser._id,
+            username: existingUser.username,
+            learnerName: existingUser.learnerName,
+          },
+          courseId,
+        },
+      });
+    }
   } catch (error) {
-    console.error('Error adding learner:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    if (error instanceof AuthError) {
+      logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', error.status);
+      return unauthorized({ message: error.message });
+    }
+    logger.error('Add learner error', { error: (error as Error).message });
+    logger.endRequest(start, '/api/organization/courses/[courseId]/learners', 'POST', 500);
+    return internalError();
   }
 }
+
+// Satisfy Next.js requirement to export a NextResponse type
+export type { NextResponse };

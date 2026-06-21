@@ -1,0 +1,284 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VerifyCertify - Secure Access</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .glass-surface {
+            background: rgba(28, 31, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-border-light {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .neon-glow-primary {
+            box-shadow: 0 0 20px rgba(173, 198, 255, 0.15);
+        }
+        .neon-bloom {
+            filter: blur(40px);
+            background: radial-gradient(circle, rgba(173, 198, 255, 0.2) 0%, rgba(173, 198, 255, 0) 70%);
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 4s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#acedff",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-tertiary-fixed-variant": "#004e5c",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#dfe2f1",
+                    "primary": "#adc6ff",
+                    "on-primary-fixed": "#001a42",
+                    "secondary-container": "#00a572",
+                    "surface-container-high": "#262a35",
+                    "surface-dim": "#0f131d",
+                    "outline-variant": "#424754",
+                    "tertiary-fixed-dim": "#4cd7f6",
+                    "error-container": "#93000a",
+                    "surface-container": "#1c1f2a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed-variant": "#004395",
+                    "primary-fixed-dim": "#adc6ff",
+                    "inverse-on-surface": "#2c303b",
+                    "surface-container-highest": "#313540",
+                    "on-primary": "#002e6a",
+                    "primary-fixed": "#d8e2ff",
+                    "on-tertiary-container": "#002f38",
+                    "on-secondary": "#003824",
+                    "secondary": "#4edea3",
+                    "on-tertiary": "#003640",
+                    "inverse-primary": "#005ac2",
+                    "on-error": "#690005",
+                    "secondary-fixed": "#6ffbbe",
+                    "surface-tint": "#adc6ff",
+                    "on-background": "#dfe2f1",
+                    "surface-bright": "#353944",
+                    "outline": "#8c909f",
+                    "tertiary-container": "#009eb9",
+                    "tertiary": "#4cd7f6",
+                    "background": "#0f131d",
+                    "primary-container": "#4d8eff",
+                    "on-tertiary-fixed": "#001f26",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-container": "#00285d",
+                    "inverse-surface": "#dfe2f1",
+                    "error": "#ffb4ab",
+                    "surface-variant": "#313540",
+                    "surface": "#0f131d",
+                    "surface-container-low": "#171b26",
+                    "surface-container-lowest": "#0a0e18",
+                    "on-secondary-container": "#00311f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "base": "8px",
+                    "xs": "4px",
+                    "lg": "40px",
+                    "sm": "12px",
+                    "container-max": "1280px",
+                    "xl": "64px",
+                    "sidebar-width": "280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Outfit"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Outfit"],
+                    "body-md": ["Inter"],
+                    "display-lg-mobile": ["Outfit"],
+                    "title-sm": ["Outfit"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Top Bar Placeholder (Navigation suppressed for Auth flow) -->
+<header class="fixed top-0 left-0 w-full z-50 px-md py-base flex justify-between items-center bg-transparent">
+<div class="flex items-center space-x-xs">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<h1 class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">VerifyCertify</h1>
+</div>
+</header>
+<main class="flex h-screen w-full">
+<!-- Left Side: Dynamic Illustration -->
+<section class="hidden md:flex relative w-1/2 h-full bg-surface-container-lowest overflow-hidden items-center justify-center border-r border-white/5">
+<!-- Atmospheric Shader Background -->
+
+<div class="relative z-10 w-full max-w-lg p-lg space-y-md">
+<div class="relative">
+<div class="absolute -inset-20 neon-bloom animate-pulse-soft"></div>
+<div class="glass-surface glass-border-light rounded-xl p-md transform -rotate-3 hover:rotate-0 transition-transform duration-700">
+<div class="flex justify-between items-start mb-md">
+<div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">workspace_premium</span>
+</div>
+<span class="font-label-caps text-label-caps text-secondary px-base py-xs bg-secondary/10 rounded-full">SOLANA VERIFIED</span>
+</div>
+<div class="space-y-xs">
+<div class="h-4 w-3/4 bg-on-surface-variant/20 rounded"></div>
+<div class="h-4 w-1/2 bg-on-surface-variant/20 rounded"></div>
+</div>
+<div class="mt-xl flex justify-between items-center">
+<div class="text-[10px] font-mono text-on-surface-variant/40">HASH: 0x72a...9b4f</div>
+<div class="h-8 w-8 rounded bg-primary/10"></div>
+</div>
+</div>
+<div class="absolute top-1/2 -right-8 glass-surface glass-border-light rounded-xl p-base w-48 shadow-2xl transform rotate-6 translate-y-4 hover:translate-y-0 transition-transform duration-700 delay-100">
+<div class="flex items-center space-x-base mb-base">
+<span class="material-symbols-outlined text-tertiary text-sm">shield</span>
+<span class="font-label-caps text-[10px] text-tertiary">ENCRYPTED</span>
+</div>
+<div class="h-2 w-full bg-tertiary/10 rounded mb-xs"></div>
+<div class="h-2 w-2/3 bg-tertiary/10 rounded"></div>
+</div>
+</div>
+<div class="pt-xl text-center md:text-left">
+<h2 class="font-display-lg text-display-lg text-on-surface leading-none mb-base">Instant Access. Total Control.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm">Access and share your verified credentials instantly. We handle the blockchain security in the background, so you can focus on your career without needing a wallet.</p>
+</div>
+</div>
+</section>
+<!-- Right Side: Sign-in Card -->
+<section class="w-full md:w-1/2 h-full relative flex items-center justify-center p-md">
+<!-- Background Accent -->
+<div class="absolute top-1/4 right-0 w-64 h-64 bg-primary/5 blur-3xl rounded-full"></div>
+<div class="absolute bottom-1/4 left-0 w-48 h-48 bg-secondary/5 blur-3xl rounded-full"></div>
+<div class="w-full max-w-md space-y-md z-10">
+<div class="text-center md:text-left mb-xl">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-xs">Secure Access</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Sign in to manage your decentralized credentials.</p>
+</div>
+<div class="glass-surface glass-border-light rounded-xl p-md md:p-xl space-y-md shadow-2xl relative overflow-hidden">
+<!-- Subtle Internal Glow -->
+<div class="absolute -top-10 -right-10 w-24 h-24 bg-primary/10 blur-xl rounded-full"></div>
+<!-- Role Toggle -->
+<div class="relative">
+<label class="font-label-caps text-label-caps text-on-surface-variant mb-base block">IDENTITY ROLE</label>
+<div class="flex p-1 bg-surface-container-highest rounded-lg border border-white/5">
+<button class="flex-1 py-base px-md rounded-md text-label-caps transition-all duration-300 bg-primary-container/20 text-primary font-bold" id="learnerBtn" onclick="toggleRole('learner')">
+                                LEARNER
+                            </button>
+<button class="flex-1 py-base px-md rounded-md text-label-caps transition-all duration-300 text-on-surface-variant hover:text-on-surface" id="orgBtn" onclick="toggleRole('org')">
+                                ORGANIZATION
+                            </button>
+</div>
+</div>
+<form class="space-y-base" onsubmit="return false;">
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="email">EMAIL ADDRESS</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-base top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">alternate_email</span>
+<input class="w-full bg-surface-container-lowest border border-white/10 rounded-lg pl-xl pr-base py-md text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all" id="email" placeholder="name@enterprise.com" type="email">
+</div>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="password">PASSWORD</label>
+<a class="text-[10px] text-primary hover:underline font-bold uppercase tracking-wider" href="#">Forgot?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-base top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full bg-surface-container-lowest border border-white/10 rounded-lg pl-xl pr-base py-md text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all" id="password" placeholder="••••••••" type="password">
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold py-md rounded-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-base flex items-center justify-center space-x-base">
+<span class="">Continue</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</form>
+<div class="relative py-base">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-white/10"></div>
+</div>
+<div class="relative flex justify-center text-xs">
+<span class="px-base bg-[#1C1F2A] text-on-surface-variant uppercase font-label-caps tracking-widest text-[10px]">Or continue with</span>
+</div>
+</div>
+<button class="w-full bg-surface-container-highest/50 hover:bg-surface-container-highest border border-white/5 text-on-surface py-md rounded-lg flex items-center justify-center space-x-base transition-all group">
+<svg class="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="currentColor"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="currentColor"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="currentColor"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="currentColor"></path>
+</svg>
+<span class="font-bold">Google</span>
+</button>
+</div>
+<div class="text-center mt-md">
+<p class="font-body-md text-on-surface-variant">
+                        New to VerifyCertify? 
+                        <a class="text-primary font-bold hover:underline" href="#">Create an account</a>
+</p>
+</div>
+</div>
+<!-- Decorative Floor Accent -->
+<div class="absolute bottom-0 right-0 p-md opacity-20 hidden md:block">
+<p class="font-mono text-[10px] uppercase tracking-[0.3em]">Protocol.Auth.v2.0_Secure</p>
+</div>
+</section>
+</main>
+<script>
+        function toggleRole(role) {
+            const learnerBtn = document.getElementById('learnerBtn');
+            const orgBtn = document.getElementById('orgBtn');
+            const activeClass = 'bg-primary-container/20 text-primary font-bold';
+            const inactiveClass = 'text-on-surface-variant hover:text-on-surface';
+
+            if (role === 'learner') {
+                learnerBtn.className = `flex-1 py-base px-md rounded-md text-label-caps transition-all duration-300 ${activeClass}`;
+                orgBtn.className = `flex-1 py-base px-md rounded-md text-label-caps transition-all duration-300 ${inactiveClass}`;
+            } else {
+                orgBtn.className = `flex-1 py-base px-md rounded-md text-label-caps transition-all duration-300 ${activeClass}`;
+                learnerBtn.className = `flex-1 py-base px-md rounded-md text-label-caps transition-all duration-300 ${inactiveClass}`;
+            }
+        }
+
+        // Simple parallax effect for the illustration
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            const illustrations = document.querySelectorAll('.glass-surface');
+            illustrations.forEach((el, index) => {
+                const depth = index === 0 ? 1 : 1.5;
+                el.style.transform = `translate(${moveX * depth}px, ${moveY * depth}px) rotate(${index === 0 ? -3 : 6}deg)`;
+            });
+        });
+    </script>
+
+
+</body></html>

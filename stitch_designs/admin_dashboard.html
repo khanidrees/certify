@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Outfit:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(28, 31, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .neon-glow-primary {
+            box-shadow: 0 0 20px rgba(173, 198, 255, 0.15);
+        }
+        .neon-glow-secondary {
+            box-shadow: 0 0 20px rgba(78, 222, 163, 0.15);
+        }
+        .sidebar-active {
+            background: rgba(173, 198, 255, 0.2);
+            color: #adc6ff;
+        }
+        .slide-panel-hidden {
+            transform: translateX(100%);
+        }
+        .slide-panel-visible {
+            transform: translateX(0);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f131d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #313540;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#acedff",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-tertiary-fixed-variant": "#004e5c",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#dfe2f1",
+                        "primary": "#adc6ff",
+                        "on-primary-fixed": "#001a42",
+                        "secondary-container": "#00a572",
+                        "surface-container-high": "#262a35",
+                        "surface-dim": "#0f131d",
+                        "outline-variant": "#424754",
+                        "tertiary-fixed-dim": "#4cd7f6",
+                        "error-container": "#93000a",
+                        "surface-container": "#1c1f2a",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed-variant": "#004395",
+                        "primary-fixed-dim": "#adc6ff",
+                        "inverse-on-surface": "#2c303b",
+                        "surface-container-highest": "#313540",
+                        "on-primary": "#002e6a",
+                        "primary-fixed": "#d8e2ff",
+                        "on-tertiary-container": "#002f38",
+                        "on-secondary": "#003824",
+                        "secondary": "#4edea3",
+                        "on-tertiary": "#003640",
+                        "inverse-primary": "#005ac2",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-tint": "#adc6ff",
+                        "on-background": "#dfe2f1",
+                        "surface-bright": "#353944",
+                        "outline": "#8c909f",
+                        "tertiary-container": "#009eb9",
+                        "tertiary": "#4cd7f6",
+                        "background": "#0f131d",
+                        "primary-container": "#4d8eff",
+                        "on-tertiary-fixed": "#001f26",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-primary-container": "#00285d",
+                        "inverse-surface": "#dfe2f1",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#313540",
+                        "surface": "#0f131d",
+                        "surface-container-low": "#171b26",
+                        "surface-container-lowest": "#0a0e18",
+                        "on-secondary-container": "#00311f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "lg": "40px",
+                        "sm": "12px",
+                        "container-max": "1280px",
+                        "xl": "64px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Outfit"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Outfit"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Outfit"],
+                        "title-sm": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "title-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden h-screen flex">
+<!-- Floating SideNavBar -->
+<aside class="fixed left-4 top-4 bottom-4 w-sidebar-width rounded-xl bg-surface-container/70 backdrop-blur-xl border border-white/5 shadow-2xl shadow-primary/10 flex flex-col p-base space-y-sm z-50" id="side-nav">
+<div class="flex items-center space-x-sm px-base py-md">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h1 class="font-title-sm text-title-sm text-primary">Solana Dev</h1>
+<p class="text-[10px] text-on-surface-variant font-label-caps tracking-widest">VERIFIED ENTERPRISE</p>
+</div>
+</div>
+<nav class="flex-1 space-y-xs overflow-y-auto px-base">
+<a class="flex items-center space-x-md px-md py-sm text-primary bg-primary-container/20 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center space-x-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-label-caps text-label-caps">Credentials</span>
+</a>
+<a class="flex items-center space-x-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">workspace_premium</span>
+<span class="font-label-caps text-label-caps">Issuance</span>
+</a>
+<a class="flex items-center space-x-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</a>
+<a class="flex items-center space-x-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="px-base space-y-xs pt-base border-t border-white/5">
+<button class="w-full flex items-center space-x-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</button>
+<button class="w-full flex items-center space-x-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg">
+<span class="material-symbols-outlined">dark_mode</span>
+<span class="font-label-caps text-label-caps">Theme</span>
+</button>
+<div class="mt-md p-md bg-primary-container/10 border border-primary/20 rounded-xl">
+<p class="text-[11px] text-primary font-label-caps mb-base">ACTIVE WALLET</p>
+<p class="text-on-surface font-mono text-xs truncate">0x...4f2a</p>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 ml-[280px] p-lg overflow-y-auto relative h-screen">
+<!-- Header -->
+<header class="flex justify-between items-center mb-xl">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Admin Dashboard</h2>
+<p class="text-on-surface-variant font-body-md mt-xs">Managing global network entities and security protocols.</p>
+</div>
+<div class="flex items-center space-x-md">
+<button class="p-base bg-surface-container hover:bg-surface-variant rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center space-x-base">
+<span class="text-on-surface-variant font-label-caps">LAST SYNC:</span>
+<span class="text-secondary font-bold font-label-caps uppercase tracking-wider">2m ago</span>
+</div>
+</div>
+</header>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-md mb-xl">
+<!-- Metric 1: Pending Orgs -->
+<div class="glass-panel p-md rounded-xl neon-glow-primary relative overflow-hidden group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<span class="text-[10px] bg-primary/20 text-primary px-sm py-xs rounded-full font-bold uppercase tracking-tighter">Awaiting</span>
+</div>
+<h3 class="text-on-surface-variant font-label-caps">Pending Orgs</h3>
+<p class="font-display-lg text-display-lg text-on-surface mt-xs">5</p>
+<div class="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">account_tree</span>
+</div>
+</div>
+<!-- Metric 2: Approved Orgs -->
+<div class="glass-panel p-md rounded-xl relative overflow-hidden group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<span class="text-[10px] bg-secondary/20 text-secondary px-sm py-xs rounded-full font-bold uppercase tracking-tighter">+12% MoM</span>
+</div>
+<h3 class="text-on-surface-variant font-label-caps">Approved Orgs</h3>
+<p class="font-display-lg text-display-lg text-on-surface mt-xs">120</p>
+</div>
+<!-- Metric 3: Network Fees -->
+<div class="glass-panel p-md rounded-xl neon-glow-secondary relative overflow-hidden group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-12 h-12 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary group-hover:bg-tertiary group-hover:text-on-tertiary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<span class="text-[10px] bg-tertiary/20 text-tertiary px-sm py-xs rounded-full font-bold uppercase tracking-tighter">Live Pool</span>
+</div>
+<h3 class="text-on-surface-variant font-label-caps">Network Fees</h3>
+<div class="flex items-baseline space-x-xs mt-xs">
+<p class="font-display-lg text-display-lg text-on-surface">15.5</p>
+<p class="font-headline-md text-headline-md text-tertiary">SOL</p>
+</div>
+</div>
+</section>
+<!-- Tabs Navigation -->
+<nav class="flex space-x-xl border-b border-outline-variant/30 mb-md px-base">
+<button class="pb-md text-primary border-b-2 border-primary font-bold transition-all flex items-center space-x-sm">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="font-label-caps text-label-caps">Registration Requests</span>
+</button>
+<button class="pb-md text-on-surface-variant hover:text-on-surface font-medium transition-all flex items-center space-x-sm">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-label-caps text-label-caps">Global Settings</span>
+</button>
+<button class="pb-md text-on-surface-variant hover:text-on-surface font-medium transition-all flex items-center space-x-sm">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">Audit Log</span>
+</button>
+</nav>
+<!-- List Content -->
+<section class="space-y-sm">
+<div class="flex items-center justify-between px-md py-base text-[10px] text-on-surface-variant font-label-caps tracking-widest border-b border-white/5 uppercase">
+<div class="w-1/3">Organization</div>
+<div class="w-1/4">Registration Type</div>
+<div class="w-1/6">Submission Date</div>
+<div class="w-1/6 text-right">Action</div>
+</div>
+<!-- List Item 1 -->
+<div class="glass-panel p-md rounded-xl flex items-center justify-between hover:bg-surface-container transition-all group cursor-pointer" onclick="openReviewPanel('Nebula Tech Labs', 'Enterprise', 'Oct 24, 2023', '0x7e...3a1f')">
+<div class="w-1/3 flex items-center space-x-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A minimalist tech corporate logo with sharp geometric shapes, rendered in a futuristic glassmorphic style against a deep slate background. The logo features cold blue and white tones, reflecting a highly secure and professional enterprise identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGIKUqeB6YaXnCaVBEX0RPl1ugAiqs98OXTiVNEJcBUNAvdELhmcJz6ZyezawBsUHIoD47UGGEZGTsFevUp2am_W8beVK710D4TgCQWU310_vbl6iLA9ZolO6VxtbFsHgyJ0hZdIZdhZMVrGXHh1ETSrHRkBEwHoKm926UHqiLEnIkLIHqjyc4CVnlN-VfECrP6t9wUQXo-0GT8WG1T4qPjHUvxMBJU0-alVHgIUiW5Z3u9kof9tiK7aE0WnEtYbnHlsGozJLUOwaL"/>
+</div>
+<div>
+<p class="font-bold text-on-surface group-hover:text-primary transition-colors">Nebula Tech Labs</p>
+<p class="text-xs text-on-surface-variant">0x7e...3a1f</p>
+</div>
+</div>
+<div class="w-1/4">
+<span class="bg-primary/10 text-primary border border-primary/20 px-sm py-xs rounded text-[10px] font-label-caps uppercase">Enterprise ID</span>
+</div>
+<div class="w-1/6">
+<p class="text-on-surface-variant text-sm">Oct 24, 2023</p>
+</div>
+<div class="w-1/6 text-right">
+<button class="px-md py-xs bg-primary text-on-primary rounded font-label-caps text-[10px] hover:neon-glow-primary transition-all">Review</button>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="glass-panel p-md rounded-xl flex items-center justify-between hover:bg-surface-container transition-all group cursor-pointer" onclick="openReviewPanel('University of Zurich', 'Academic', 'Oct 25, 2023', '0xab...90bc')">
+<div class="w-1/3 flex items-center space-x-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="An academic crest or institutional logo presented in a high-tech digital format, featuring intricate golden-ratio patterns and glowing cyan accents. The background is a sophisticated dark-mode glass texture, evoking the fusion of traditional education and futuristic blockchain technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh2N6s6kPGqvYOB3FMHB1EmhndWvUJf8r-HsoDq6C89M7-m9jK-2_u4q5BzdwcmLbqGd_2Qbo5pA-6iStqTlkEHenUPbVq8C62f84QY0HC8hNNKiBX0M7yuCCwugqs3bsj9bnb0LcvOpoLruyX14JdU26VX2QPWCKSB25bpx9W4qiRR2kjVQvudoLCOySQgx8lNpO4MXIuck_bA3r8TqP3WW0gZrRiQGfWlzFcn1B2C2VYNpqA-89pY7-91a-hygM1g3V6VKZk3KeL"/>
+</div>
+<div>
+<p class="font-bold text-on-surface group-hover:text-primary transition-colors">University of Zurich</p>
+<p class="text-xs text-on-surface-variant">0xab...90bc</p>
+</div>
+</div>
+<div class="w-1/4">
+<span class="bg-tertiary/10 text-tertiary border border-tertiary/20 px-sm py-xs rounded text-[10px] font-label-caps uppercase">Academic Hub</span>
+</div>
+<div class="w-1/6">
+<p class="text-on-surface-variant text-sm">Oct 25, 2023</p>
+</div>
+<div class="w-1/6 text-right">
+<button class="px-md py-xs bg-primary text-on-primary rounded font-label-caps text-[10px] hover:neon-glow-primary transition-all">Review</button>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="glass-panel p-md rounded-xl flex items-center justify-between hover:bg-surface-container transition-all group cursor-pointer" onclick="openReviewPanel('CyberGuard Global', 'Government', 'Oct 26, 2023', '0x99...ff12')">
+<div class="w-1/3 flex items-center space-x-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A security-themed shield emblem for a cybersecurity agency, designed with deep metallic textures and vibrant emerald green highlights. The style is premium dark-mode, emphasizing military-grade encryption and digital trust through clean lines and a soft neon glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoAigoI5GQoPwhd5IC1y23f8EMUG83vkn9ah_qFOGBOpdaZsHt_qBWLh9iFXXZ11VqC81iRcj7UGKByBhYjT4IouxPx61PIv14vOsbfl4LzhmCklz-IiJ62YDIlpkuAiBMvrvV5QNnlU7JyerLMTs-5zTLqEj_6qXoZOIqjzAeOZejng_T9sgRJDLgIo4JZ6GlzCYkpq4iGTZ9_eZwrGXTkeFTYqqaEss0UKOZyw0kMuI480W7PoVdBKwAT_CqIq6Vvkggghl70IFO"/>
+</div>
+<div>
+<p class="font-bold text-on-surface group-hover:text-primary transition-colors">CyberGuard Global</p>
+<p class="text-xs text-on-surface-variant">0x99...ff12</p>
+</div>
+</div>
+<div class="w-1/4">
+<span class="bg-secondary/10 text-secondary border border-secondary/20 px-sm py-xs rounded text-[10px] font-label-caps uppercase">Governmental</span>
+</div>
+<div class="w-1/6">
+<p class="text-on-surface-variant text-sm">Oct 26, 2023</p>
+</div>
+<div class="w-1/6 text-right">
+<button class="px-md py-xs bg-primary text-on-primary rounded font-label-caps text-[10px] hover:neon-glow-primary transition-all">Review</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Overlay Shadow for Slide Panel -->
+<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" id="overlay" onclick="closeReviewPanel()"></div>
+<!-- Review Side Panel -->
+<div class="fixed top-0 right-0 h-full w-[450px] bg-surface-container-high border-l border-white/10 z-[70] slide-panel-hidden transition-transform duration-500 ease-in-out p-lg shadow-2xl flex flex-col" id="review-panel">
+<div class="flex justify-between items-center mb-xl">
+<h3 class="font-headline-md text-headline-md text-on-surface">Organization Review</h3>
+<button class="p-xs text-on-surface-variant hover:text-on-surface transition-colors" onclick="closeReviewPanel()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 space-y-xl overflow-y-auto pr-base">
+<!-- Header Identity -->
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-2xl bg-surface-container-highest border border-white/5 p-md mb-md">
+<img class="w-full h-full object-contain opacity-80" data-alt="High-resolution close-up of a digital enterprise identity logo on a textured dark-mode surface. The lighting is focused, creating subtle depth with soft shadows and sharp highlights, reinforcing the futuristic and secure nature of the verification platform." id="review-logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCcckR3pHb3h40AYYOx2umr3Y-RmkyiYiESb-C86M-VXgL5pXQX9rEkifi3qBHd79n6LQtrU_-mNUB5DB7Tja_sG8ObJN9UzLNaE6v3zvlJCnK5iE2qD-yQz9Y6nqc_GxCt-ZZehtI310uteJHLNAdsvXnzE1TMVkPdA1fY-1NqSfJrw0VpF1BTdXjdLNLGMKLglpnJXbo_wG_8bRVhN0AbGvGQLbrdxnzs4sqBrZmE-TGKrC1cxkQscmQT_3VUjqNCrM-cmFfIGd3"/>
+</div>
+<h4 class="text-display-lg-mobile font-display-lg-mobile text-on-surface" id="review-title">Nebula Tech Labs</h4>
+<p class="text-xs text-primary font-mono bg-primary/10 px-md py-xs rounded-full mt-base" id="review-wallet">0x7e...3a1f</p>
+</div>
+<!-- Documents Section -->
+<div>
+<h5 class="font-label-caps text-label-caps text-on-surface-variant border-b border-white/5 pb-xs mb-md">VERIFICATION DOCUMENTS</h5>
+<div class="space-y-sm">
+<div class="p-md bg-surface-container rounded-xl border border-white/5 flex items-center justify-between group hover:border-primary/30 transition-colors cursor-pointer">
+<div class="flex items-center space-x-md">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<div>
+<p class="text-on-surface text-sm font-medium">Business_Registration.pdf</p>
+<p class="text-[10px] text-on-surface-variant font-label-caps">ISSUED BY STATE AUTH</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">visibility</span>
+</div>
+<div class="p-md bg-surface-container rounded-xl border border-white/5 flex items-center justify-between group hover:border-primary/30 transition-colors cursor-pointer">
+<div class="flex items-center space-x-md">
+<span class="material-symbols-outlined text-on-surface-variant">policy</span>
+<div>
+<p class="text-on-surface text-sm font-medium">Platform_Compliance.doc</p>
+<p class="text-[10px] text-on-surface-variant font-label-caps">SIGNED SHA-256</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">visibility</span>
+</div>
+</div>
+</div>
+<!-- Registration Info -->
+<div class="grid grid-cols-2 gap-md">
+<div class="space-y-xs">
+<p class="font-label-caps text-[10px] text-on-surface-variant">ENTITY TYPE</p>
+<p class="text-on-surface font-medium" id="review-type">Private Enterprise</p>
+</div>
+<div class="space-y-xs">
+<p class="font-label-caps text-[10px] text-on-surface-variant">SUBMISSION DATE</p>
+<p class="text-on-surface font-medium" id="review-date">Oct 24, 2023</p>
+</div>
+<div class="space-y-xs">
+<p class="font-label-caps text-[10px] text-on-surface-variant">SOLANA REGION</p>
+<p class="text-on-surface font-medium">US-West-Mainnet</p>
+</div>
+<div class="space-y-xs">
+<p class="font-label-caps text-[10px] text-on-surface-variant">CERTIFICATES</p>
+<p class="text-on-surface font-medium">12k Expected</p>
+</div>
+</div>
+<!-- Risk Profile -->
+<div class="p-md rounded-xl bg-secondary/5 border border-secondary/20">
+<div class="flex items-center space-x-sm mb-xs">
+<span class="material-symbols-outlined text-secondary text-sm">verified</span>
+<p class="text-secondary font-label-caps text-[10px] tracking-widest">LOW RISK PROFILE</p>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">No automated red flags detected in wallet history or domain registration. KYC data matches cross-reference databases.</p>
+</div>
+</div>
+<!-- Sticky Footer Actions -->
+<div class="pt-xl flex space-x-md">
+<button class="flex-1 py-md bg-secondary text-on-secondary rounded-xl font-bold font-label-caps tracking-widest hover:neon-glow-secondary transition-all active:scale-95" onclick="closeReviewPanel()">
+                APPROVE
+            </button>
+<button class="flex-1 py-md bg-surface-container-highest border border-error/50 text-error rounded-xl font-bold font-label-caps tracking-widest hover:bg-error/10 transition-all active:scale-95" onclick="closeReviewPanel()">
+                DENY
+            </button>
+</div>
+</div>
+<!-- Background Decoration -->
+<!-- STITCH_SHADER_START:ANIMATION_2 class="fixed inset-0 w-full h-full pointer-events-none opacity-20" -->
+<div class="fixed inset-0 w-full h-full pointer-events-none opacity-20" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_2" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_2');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+    
+    // Background Grid
+    vec2 grid_uv = fract(uv * 15.0 - u_time * 0.05);
+    float grid = smoothstep(0.02, 0.0, abs(grid_uv.x - 0.5)) + smoothstep(0.02, 0.0, abs(grid_uv.y - 0.5));
+    
+    // Dark-to-light glowing gradient
+    vec3 bg_color = mix(vec3(0.04, 0.06, 0.1), vec3(0.06, 0.09, 0.16), uv.y);
+    
+    // Pulse/Glow effect
+    float pulse = sin(u_time * 0.5) * 0.5 + 0.5;
+    vec3 glow = vec3(0.23, 0.51, 0.96) * (0.05 + 0.05 * pulse);
+    
+    vec3 color = bg_color + (grid * 0.03) + (glow * (1.0 - uv.y));
+    
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_2 -->
+<script>
+        function openReviewPanel(title, type, date, wallet) {
+            const panel = document.getElementById('review-panel');
+            const overlay = document.getElementById('overlay');
+            
+            document.getElementById('review-title').innerText = title;
+            document.getElementById('review-type').innerText = type;
+            document.getElementById('review-date').innerText = date;
+            document.getElementById('review-wallet').innerText = wallet;
+            
+            panel.classList.remove('slide-panel-hidden');
+            panel.classList.add('slide-panel-visible');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.add('opacity-100'), 10);
+        }
+
+        function closeReviewPanel() {
+            const panel = document.getElementById('review-panel');
+            const overlay = document.getElementById('overlay');
+            
+            panel.classList.remove('slide-panel-visible');
+            panel.classList.add('slide-panel-hidden');
+            overlay.classList.remove('opacity-100');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+        }
+
+        // Simple mock micro-interaction for wallet copying
+        document.getElementById('review-wallet').addEventListener('click', function() {
+            const originalText = this.innerText;
+            this.innerText = 'COPIED TO CLIPBOARD';
+            setTimeout(() => this.innerText = originalText, 1500);
+        });
+    </script>
+</body></html>

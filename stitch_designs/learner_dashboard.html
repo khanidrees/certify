@@ -1,0 +1,469 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Learner Dashboard | VerifyCertify</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=Inter:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Outfit:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-surface {
+            background: rgba(28, 31, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card-highlight {
+            position: relative;
+        }
+        .glass-card-highlight::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px -5px rgba(173, 198, 255, 0.3);
+        }
+        .pulse-green {
+            animation: pulse-animation 2s infinite;
+        }
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0px rgba(78, 222, 163, 0.7); }
+            100% { box-shadow: 0 0 0 10px rgba(78, 222, 163, 0); }
+        }
+        body {
+            background-color: #0f131d;
+            color: #dfe2f1;
+            overflow-x: hidden;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#acedff",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-tertiary-fixed-variant": "#004e5c",
+                    "on-error-container": "#ffdad6",
+                    "on-surface": "#dfe2f1",
+                    "primary": "#adc6ff",
+                    "on-primary-fixed": "#001a42",
+                    "secondary-container": "#00a572",
+                    "surface-container-high": "#262a35",
+                    "surface-dim": "#0f131d",
+                    "outline-variant": "#424754",
+                    "tertiary-fixed-dim": "#4cd7f6",
+                    "error-container": "#93000a",
+                    "surface-container": "#1c1f2a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed-variant": "#004395",
+                    "primary-fixed-dim": "#adc6ff",
+                    "inverse-on-surface": "#2c303b",
+                    "surface-container-highest": "#313540",
+                    "on-primary": "#002e6a",
+                    "primary-fixed": "#d8e2ff",
+                    "on-tertiary-container": "#002f38",
+                    "on-secondary": "#003824",
+                    "secondary": "#4edea3",
+                    "on-tertiary": "#003640",
+                    "inverse-primary": "#005ac2",
+                    "on-error": "#690005",
+                    "secondary-fixed": "#6ffbbe",
+                    "surface-tint": "#adc6ff",
+                    "on-background": "#dfe2f1",
+                    "surface-bright": "#353944",
+                    "outline": "#8c909f",
+                    "tertiary-container": "#009eb9",
+                    "tertiary": "#4cd7f6",
+                    "background": "#0f131d",
+                    "primary-container": "#4d8eff",
+                    "on-tertiary-fixed": "#001f26",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-container": "#00285d",
+                    "inverse-surface": "#dfe2f1",
+                    "error": "#ffb4ab",
+                    "surface-variant": "#313540",
+                    "surface": "#0f131d",
+                    "surface-container-low": "#171b26",
+                    "surface-container-lowest": "#0a0e18",
+                    "on-secondary-container": "#00311f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "base": "8px",
+                    "xs": "4px",
+                    "lg": "40px",
+                    "sm": "12px",
+                    "container-max": "1280px",
+                    "xl": "64px",
+                    "sidebar-width": "280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Outfit"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Outfit"],
+                    "body-md": ["Inter"],
+                    "display-lg-mobile": ["Outfit"],
+                    "title-sm": ["Outfit"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Background Shader Overlay -->
+
+<!-- SideNavBar -->
+<aside class="fixed left-4 top-4 bottom-4 w-sidebar-width glass-surface rounded-xl flex flex-col p-base space-y-sm z-50 hidden md:flex">
+<div class="px-base py-md">
+<span class="font-title-sm text-title-sm text-primary">VerifyCertify</span>
+</div>
+<div class="flex-1 space-y-xs overflow-y-auto">
+<a class="flex items-center gap-base p-base text-primary bg-primary-container/20 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase">Dashboard</span>
+</a>
+<a class="flex items-center gap-base p-base text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-label-caps text-label-caps uppercase">Credentials</span>
+</a>
+<a class="flex items-center gap-base p-base text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+<span class="font-label-caps text-label-caps uppercase">Issuance</span>
+</a>
+<a class="flex items-center gap-base p-base text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-label-caps text-label-caps uppercase">Analytics</span>
+</a>
+<a class="flex items-center gap-base p-base text-on-surface-variant hover:bg-white/5 hover:text-on-surface rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps uppercase">Settings</span>
+</a>
+</div>
+<div class="mt-auto border-t border-white/5 pt-base">
+<div class="flex items-center gap-sm p-base bg-surface-container-high rounded-xl mb-base">
+<div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center text-primary font-bold">SD</div>
+<div class="overflow-hidden">
+<p class="font-title-sm text-sm truncate">Solana Dev</p>
+<p class="text-xs text-on-surface-variant">Verified Enterprise</p>
+</div>
+</div>
+
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="md:ml-[312px] min-h-screen pb-xl">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 bg-surface/50 backdrop-blur-lg border-b border-outline-variant/30 flex justify-between items-center w-full px-md py-base">
+<div class="flex items-center gap-sm">
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">Credential Hub</h1>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center gap-xs text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-secondary pulse-green"></span>
+<span class="font-label-caps text-[10px]">MAINNET</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<button class="px-base py-1 bg-surface-container-highest border border-white/10 rounded-full font-label-caps text-xs text-primary">0x...4f2a</button>
+</div>
+</div>
+</header>
+<div class="px-md md:px-lg mt-md">
+<!-- Summary Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md mb-xl">
+<div class="glass-surface glass-card-highlight p-md rounded-xl space-y-xs flex flex-col justify-between">
+<p class="font-label-caps text-on-surface-variant text-[11px] uppercase tracking-widest">Total Certificates Earned</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-display-lg text-primary">12</span>
+<span class="text-secondary font-label-caps text-xs">+2 this month</span>
+</div>
+</div>
+<div class="glass-surface glass-card-highlight p-md rounded-xl space-y-xs">
+<p class="font-label-caps text-on-surface-variant text-[11px] uppercase tracking-widest">Last Verified</p>
+<div class="flex items-center gap-sm mt-xs">
+<span class="material-symbols-outlined text-secondary" data-icon="history">history</span>
+<span class="font-title-sm">2h ago</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-1">Solana Blockchain Network</p>
+</div>
+
+</div>
+<div class="flex flex-col lg:flex-row gap-lg">
+<!-- Certificates Grid -->
+<div class="flex-1">
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-headline-md text-headline-md">Digital Credentials</h2>
+<button class="text-sm font-label-caps text-primary flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                            Filter
+                        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-md">
+<!-- Card 1 -->
+<div class="glass-surface glass-card-highlight rounded-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all duration-300">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A futuristic digital credential background featuring high-velocity abstract lines and neon cyan glows over a dark slate base. The aesthetic is clean and professional, evoking Solana blockchain security and digital permanence. The lighting is soft and atmospheric with high-end tech vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQnPCqrBFYHvLCfLxvBElqSrUnEFnty2jqU9LiwrB_StL0uyJzcLe3UVCD1daeOqcYMUzmVVvj9lQuPh5VMBHaOiEciEKKECM8LuJ9JkQ7xukBIr8ZVEFaQ4oJu-0_5Se33lrbJ3QQY0BcS8oKSxqfmJO4lfP0PSDklLbj5f20_kEfcMSk4IfuwAKOyWS22T8V3CETfObDWhL0m58K3OiTD9eLQmGd3dzQGD_Ufugr4_q26De1NPC88VybLmaSmTzm0kMgh9IJDjSu">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-base left-base">
+<span class="px-xs py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase">Verified</span>
+</div>
+</div>
+<div class="p-base flex-1 flex flex-col gap-xs">
+<p class="font-title-sm leading-tight">Solana Smart Contract Security</p>
+<p class="text-xs text-on-surface-variant">Solana Foundation</p>
+<p class="text-[10px] font-label-caps text-outline uppercase mt-base">Issued: Oct 12, 2023</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-white/5">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="share" title="Share link">share</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="open_in_new" title="Solscan link">open_in_new</span>
+</div>
+<button class="flex items-center gap-xs text-xs font-label-caps text-primary hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                        PDF
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-surface glass-card-highlight rounded-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all duration-300">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="Cybersecurity themed abstract art with glowing data streams and grid patterns in deep indigos and bright emerald accents. The mood is high-tech and military-grade, representing advanced verification systems and digital certificates on a decentralized network." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3ka9I1uRNuK-LgEgaeLiCjsKrfEjdKG1_9m8tGqytFIeF05K08d25LaHnuUT1EErQVgJzC60-6fnpBgPGCPchq2jfuLIa0dXgmpKrinut57_SxhkbrNrIxtRpWM6wRZ05Nq66nBNq7jRzgy407cSG9D8YhOjoa3up5kXW7KzekGD5Khccab7U-jb-dticEGaeo9hBDLWuC5NqJxN8kOesCLIIsPWyqvr2Av-Kfq0sCCueD1s862UuiWNGdrl38mHey2v_HNY8LJRb">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-base left-base">
+<span class="px-xs py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase">Verified</span>
+</div>
+</div>
+<div class="p-base flex-1 flex flex-col gap-xs">
+<p class="font-title-sm leading-tight">Rust for Web3 Developers</p>
+<p class="text-xs text-on-surface-variant">Rust Institute</p>
+<p class="text-[10px] font-label-caps text-outline uppercase mt-base">Issued: Nov 05, 2023</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-white/5">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="share" title="Share link">share</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="open_in_new" title="Solscan link">open_in_new</span>
+</div>
+<button class="flex items-center gap-xs text-xs font-label-caps text-primary hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                        PDF
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-surface glass-card-highlight rounded-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all duration-300">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A sophisticated geometric composition of translucent glass plates overlapping in 3D space, reflecting soft neon lights in a spectrum of blue and silver. The image embodies the transparency and layering of secure blockchain records and enterprise-level trust in a modern digital era." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDteTnvjua-aXQ9xzeNlH3wzMMC2Am-J1JP7NSOCjzxJFnzDKNIEBDKaWhcMl-oBoVsjlyb4iyp8nj5Cp53FfPBWqTDkWm1gRWIZnr3avu1E8DpoMB8OUuePiPAl-yyOKKHCqR9zYh9nfppeP6emVfYX3-vF4GpSrzShDMNiqXllZgtJ1oOgsp8r-jBmqRk-RR1a1PgIzhWu8iCHy4uO3oDdYqDVSJ8HX2OaZ0BXGhg3BYy_q30jhqBfAN-p1pkD-nG6v27-95RccrU">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-base left-base">
+<span class="px-xs py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase">Verified</span>
+</div>
+</div>
+<div class="p-base flex-1 flex flex-col gap-xs">
+<p class="font-title-sm leading-tight">Decentralized ID Standards</p>
+<p class="text-xs text-on-surface-variant">W3C Learning Hub</p>
+<p class="text-[10px] font-label-caps text-outline uppercase mt-base">Issued: Jan 20, 2024</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-white/5">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="share" title="Share link">share</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="open_in_new" title="Solscan link">open_in_new</span>
+</div>
+<button class="flex items-center gap-xs text-xs font-label-caps text-primary hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                        PDF
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-surface glass-card-highlight rounded-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all duration-300">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A panoramic view of a digital network constellation, with glowing nodes connected by fiber-optic light paths. The color palette is dominated by deep space navy and electric blues. The visual style is premium and data-driven, highlighting global connectivity and the speed of the Solana ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZl4BDpoorJBWMHNl51X5VPolI6RPg1MU2RIjlJnpGdBzerxwIqJW419MJnQUXr5UEAkU7SLTy_k1fq0BHYuShV-blTu7yPVaIIkBWd_P_5INi1NRWUEmKlJjPCaAVZPPoKD9a-yN29QhE8K7eTZiiKrP_MGEv1gSRk0PoZ2SPm2u2Kv97wJ898GI1GfV8rOPzHHYlYY86TzunWoTqCXNGPvZZTRIZGeIn2lC34fut-eQdkuDckChtCt3kF9EF_NERqN5c8F-f85g1">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-base left-base">
+<span class="px-xs py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase">Verified</span>
+</div>
+</div>
+<div class="p-base flex-1 flex flex-col gap-xs">
+<p class="font-title-sm leading-tight">Advanced NFT Architectures</p>
+<p class="text-xs text-on-surface-variant">Metaplex University</p>
+<p class="text-[10px] font-label-caps text-outline uppercase mt-base">Issued: Feb 15, 2024</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-white/5">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="share" title="Share link">share</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="open_in_new" title="Solscan link">open_in_new</span>
+</div>
+<button class="flex items-center gap-xs text-xs font-label-caps text-primary hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                        PDF
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="glass-surface glass-card-highlight rounded-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all duration-300">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A macro shot of a complex circuit board with ethereal light flowing through the paths, creating a sense of live processing. The lighting features soft gradients of blue and purple, focusing on a central glowing processor. The style is modern, technical, and high-end, evoking the internal workings of blockchain protocols." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcvOxjOvd_FpEddVNmAYPeAt73HKl7rzyW5ELh-j0fY2wG7gCwCY1k6CQuPdzx4YXL_OHTUXvCVKvpk2b6tvwrI6ldiLs0c2HtRSuYXBuec07E7aXIeHP7u6UEaiDFqM1nJQ0iBvivGkooBUFmQ5kIBeK1spWE6IxKz_u9LOncOSHrml2DXFijUJgo2ze-7DmwBxJM2pgKlT9mfLnNUx86TV_xKWnoaOgLoOch6h1WtztHxNHPvVfFUiVsKtlkpAMzDg0d09adb8OG">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-base left-base">
+<span class="px-xs py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase">Verified</span>
+</div>
+</div>
+<div class="p-base flex-1 flex flex-col gap-xs">
+<p class="font-title-sm leading-tight">Zero-Knowledge Proofs 101</p>
+<p class="text-xs text-on-surface-variant">Cryptography Lab</p>
+<p class="text-[10px] font-label-caps text-outline uppercase mt-base">Issued: Mar 02, 2024</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-white/5">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="share" title="Share link">share</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="open_in_new" title="Solscan link">open_in_new</span>
+</div>
+<button class="flex items-center gap-xs text-xs font-label-caps text-primary hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                        PDF
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="glass-surface glass-card-highlight rounded-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all duration-300">
+<div class="h-40 bg-surface-container-highest relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="An abstract 3D render of crystalline structures growing in a dark space, illuminated by a single focused light source from above. The structures reflect a spectrum of cool blues and sharp whites. The aesthetic is futuristic and represents the concept of digital growth and the solidifying of achievements on a ledger." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbkfkSV0kIKlK5vuYmMW8vxX1o4ve6tOpCnNZPvuuIGp8OHIe1LUIwbNSySTJ5NJFKeKlVOGgVVzBh00rMUbsVeyWdFlD8boej_fwHtwNvzgHH6s0drxHkNdzh4tGlrW88qGobOPMf7BkOyNSpSV5RHINpAVBGzuUEGHUc3CNSBEsKdD-qcBhzPl7vsADMu0GyOayr0esRmU78w9FD29tV7NrteNrqILGgsACYTRpR6X0tSfs8LsUhGz00RfKrjArnQPPWY4QXkBVx">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-base left-base">
+<span class="px-xs py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase">Verified</span>
+</div>
+</div>
+<div class="p-base flex-1 flex flex-col gap-xs">
+<p class="font-title-sm leading-tight">EVM vs Solana Programming</p>
+<p class="text-xs text-on-surface-variant">DevCon Masterclass</p>
+<p class="text-[10px] font-label-caps text-outline uppercase mt-base">Issued: Mar 15, 2024</p>
+<div class="mt-auto pt-md flex items-center justify-between border-t border-white/5">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="share" title="Share link">share</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" data-icon="open_in_new" title="Solscan link">open_in_new</span>
+</div>
+<button class="flex items-center gap-xs text-xs font-label-caps text-primary hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                        PDF
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Wallet Connection Widget (Sidebar Helper) -->
+<div class="w-full lg:w-80 space-y-md">
+<div class="glass-surface glass-card-highlight p-md rounded-xl space-y-base relative overflow-hidden">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 blur-3xl rounded-full"></div>
+<h3 class="font-title-sm text-primary flex items-center gap-sm">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+                            Why Solana?
+                        </h3>
+<p class="text-xs leading-relaxed text-on-surface-variant">Solana provides high-velocity transactions and military-grade security. Your credentials are anchored as immutable assets on a global ledger, accessible anywhere, anytime.</p>
+<div class="space-y-sm mt-md">
+<div class="flex items-start gap-sm">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">1</div>
+<div class="flex-1">
+<p class="text-xs font-bold">Fast &amp; Affordable</p>
+<p class="text-[10px] text-on-surface-variant">Verify millions of records for fractions of a cent.</p>
+</div>
+</div>
+<div class="flex items-start gap-sm">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">2</div>
+<div class="flex-1">
+<p class="text-xs font-bold">Zero Knowledge</p>
+<p class="text-[10px] text-on-surface-variant">Share your proof without revealing private data.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-surface glass-card-highlight p-md rounded-xl space-y-base"><h3 class="font-title-sm text-secondary flex items-center gap-sm"><span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>How it works</h3><p class="text-xs text-on-surface-variant">Your credentials are cryptographically secured and stored on a decentralized ledger, ensuring they remain permanent and verifiable forever.</p><ul class="text-[10px] space-y-xs list-disc list-inside text-outline"><li class="">Instant verification via QR or link</li><li class="">Tamper-proof digital signatures</li><li class="">No account or wallet required to view</li></ul><button class="w-full mt-base py-base border border-primary/30 rounded-lg text-primary text-xs font-label-caps hover:bg-primary/5 transition-all active:scale-95">Learn About Permanence</button></div>
+<!-- Promo/Action -->
+<div class="bg-gradient-to-br from-primary-container to-primary p-md rounded-xl text-on-primary shadow-2xl shadow-primary/20 flex flex-col gap-sm">
+<p class="font-headline-md text-sm">Need to verify a paper degree?</p>
+<p class="text-xs opacity-90">Upload a scan and let our AI cross-reference it with university databases on-chain.</p>
+<button class="bg-white text-on-primary-container py-base rounded-lg font-label-caps text-xs mt-base flex items-center justify-center gap-sm hover:shadow-lg transition-shadow">
+<span class="material-symbols-outlined text-sm" data-icon="upload_file">upload_file</span>
+                            Start Verification
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface-container/90 backdrop-blur-xl border-t border-white/10 flex items-center justify-around px-md z-50">
+<a class="flex flex-col items-center gap-xs text-primary" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-label-caps uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center gap-xs text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="verified">verified</span>
+<span class="text-[10px] font-label-caps uppercase">Docs</span>
+</a>
+<a class="flex flex-col items-center gap-xs text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="monitoring">monitoring</span>
+<span class="text-[10px] font-label-caps uppercase">Stats</span>
+</a>
+<a class="flex flex-col items-center gap-xs text-on-surface-variant" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="settings">settings</span>
+<span class="text-[10px] font-label-caps uppercase">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.glass-surface').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Simple mock for "Switch Account" interaction
+        const walletDisplay = document.querySelector('.font-mono');
+        if(walletDisplay) {
+            walletDisplay.addEventListener('click', () => {
+                alert('Wallet connector interface would open here.');
+            });
+        }
+    </script>
+
+
+</body></html>

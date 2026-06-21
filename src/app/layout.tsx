@@ -23,7 +23,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`antialiased`}>
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+      </head>
+      <body className={`antialiased dark bg-surface text-on-surface`}>
         <AppProviders>
           <AppLayout 
             links={links}

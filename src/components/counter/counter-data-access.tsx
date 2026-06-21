@@ -66,106 +66,69 @@ export function useCounterProgram() {
     },
   });
 
-  function useCertificateByCourseIdLearnerId ( courseId: string, learnerId: string){
-    // const paddedLearnerId = learnerId.padEnd(20, '\0');
-    // const paddedCourseId = courseId.padEnd(20, '\0');
-    console.log(learnerId, 'learnerId in useCertificatesByLearner');
-    return useQuery({
-      queryKey: ['certificates', 'learner', { cluster,  courseId, learnerId }],
-      queryFn: async () => {
-        console.log(learnerId, 'learnerId in queryFn');
-        const learnerIdBytes = Buffer.from(learnerId);
-        const courseIdBytes = Buffer.from(courseId);
-        // fetch all certificate accounts where the learnerId matches
-        return program.account.certificate.all(
-          [
-          {
-            memcmp: {
-              offset: 8 , 
-              bytes: bs58.encode(Buffer.concat([
-                Buffer.from([learnerId.length, 0, 0, 0]),
-                learnerIdBytes]
-              )),
-            }
-            
-          },
-          {
-            memcmp: {
-              offset: 8 + 4 + learnerId.length  ,// 4 delimiter to string
-              bytes: bs58.encode(Buffer.concat([
-                Buffer.from([courseId.length, 0, 0, 0]),
-                courseIdBytes]
-              )),
-            }
-            
-          },
-        ]
-      );
-      },
-      enabled: !!learnerId && !!courseId && !!program,
-    });
-  }
-  
-  // Query to get all certificates by learnerId
-  function useCertificatesByLearner(learnerId: string) {
-    const paddedLearnerId = learnerId.padEnd(20, '\0');
-    console.log(learnerId, 'learnerId in useCertificatesByLearner');
-    return useQuery({
-      queryKey: ['certificates', 'learner', { cluster, learnerId }],
-      queryFn: async () => {
-        console.log(learnerId, 'learnerId in queryFn');
-        const learnerIdBytes = Buffer.from(paddedLearnerId);
-        // fetch all certificate accounts where the learnerId matches
-        return program.account.certificate.all(
-          [
-          {
-            memcmp: {
-              offset: 8 + 4, // 8 + 54 + 24, where 8 is the discriminator size, 54 is the courseId size, and 24 is the learnerId size
-              bytes: bs58.encode(learnerIdBytes),
-            },
-          },
-        ]
-      );
-      },
-      enabled: !!learnerId && !!program,
-    });
-  }
-
-  // const usePublicCertificate = 
-
-  // use this to get the certificate account by learnerId inside of the learner profile
-  // const getCertficateAccount = useQuery({
-  //   queryKey: ['get-certs', { cluster , 
-  //     // learnerId: 'learnerId'
-  //      }],
-  //   queryFn: ({learnerId}) => {
-  //     const learnerIdBytes = Buffer.from(learnerId); 
-  //     const learnerIdOffset = 8;
-  //     const getProgramAccountsConfig = {
-  //       filters: [
-  //         {
-  //           memcmp: {
-  //           offset: learnerIdOffset,
-  //           bytes: bs58.encode(learnerIdBytes),
-  //           },
-  //         },
-  //       ],
-  //     };
-  //     return connection.getProgramAccounts(programId,getProgramAccountsConfig);
-  //   },
-  // })
-
-  
-
   return {
     program,
     programId,
     // accounts,
     getProgramAccount,
     createCertificate,
-    useCertificatesByLearner,
-    useCertificateByCourseIdLearnerId
   }
+}
+
+export function useCertificateByCourseIdLearnerId(courseId: string, learnerId: string) {
+  const { program } = useCounterProgram()
+  const { cluster } = useCluster()
+
+  return useQuery({
+    queryKey: ['certificates', 'learner', { cluster, courseId, learnerId }],
+    queryFn: async () => {
+      const learnerIdBytes = Buffer.from(learnerId);
+      const courseIdBytes = Buffer.from(courseId);
+      return program.account.certificate.all([
+        {
+          memcmp: {
+            offset: 8,
+            bytes: bs58.encode(Buffer.concat([
+              Buffer.from([learnerId.length, 0, 0, 0]),
+              learnerIdBytes
+            ])),
+          }
+        },
+        {
+          memcmp: {
+            offset: 8 + 4 + learnerId.length,
+            bytes: bs58.encode(Buffer.concat([
+              Buffer.from([courseId.length, 0, 0, 0]),
+              courseIdBytes
+            ])),
+          }
+        },
+      ]);
+    },
+    enabled: !!learnerId && !!courseId && !!program,
+  });
+}
+
+export function useCertificatesByLearner(learnerId: string) {
+  const { program } = useCounterProgram()
+  const { cluster } = useCluster()
+  const paddedLearnerId = learnerId.padEnd(20, '\0');
+
+  return useQuery({
+    queryKey: ['certificates', 'learner', { cluster, learnerId }],
+    queryFn: async () => {
+      const learnerIdBytes = Buffer.from(paddedLearnerId);
+      return program.account.certificate.all([
+        {
+          memcmp: {
+            offset: 8 + 4,
+            bytes: bs58.encode(learnerIdBytes),
+          },
+        },
+      ]);
+    },
+    enabled: !!learnerId && !!program,
+  });
 }
 
 export function useCounterProgramAccount({ account }: { account: PublicKey }) {

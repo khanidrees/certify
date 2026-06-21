@@ -1,51 +1,80 @@
-// get api/admin/dashboard to get all organization users and their approval status
 import { dbConnect } from '@/lib/mongodb';
-import User, { IUser } from '@/models/User';
-import { NextRequest } from 'next/server'; 
-import jwt from 'jsonwebtoken';   
+import User from '@/models/User';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
+import { AuthError, verifyRole } from '@/lib/auth';
+import {
+  ok,
+  badRequest,
+  unauthorized,
+  notFound,
+  internalError,
+} from '@/lib/apiResponse';
+import { logger } from '@/lib/logger';
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
+const patchSchema = z.object({
+  userId: z.string().min(1, 'userId is required'),
+  isApproved: z.boolean({ required_error: 'isApproved must be a boolean' }),
+});
 
+// GET /api/admin/dashboard — list all organization users
 export async function GET(req: NextRequest) {
-  const auth = req.headers.get('authorization');
-  if (!auth) return Response.json({ message: 'Unauthorized' }, { status: 401 });
-  
-  const token = auth.split(' ')[1];
+  const start = logger.startRequest('/api/admin/dashboard', 'GET');
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
-    if (payload.role !== 'admin') return Response.json({ message: 'Forbidden' }, { status: 403 });
-
+    verifyRole(req, 'admin');
     await dbConnect();
-    const users: IUser[] = await User.find({ role: 'organization' }).select('username organizationName isApproved');
-    
-    return Response.json(users);
+    const users = await User.find({ role: 'organization' })
+      .select('username organizationName isApproved createdAt')
+      .lean();
+
+    logger.endRequest(start, '/api/admin/dashboard', 'GET', 200);
+    return ok({ message: 'Organization users fetched', data: users });
   } catch (error) {
-    return Response.json({ message: 'Invalid token', error }, { status: 401 });
+    if (error instanceof AuthError) {
+      logger.endRequest(start, '/api/admin/dashboard', 'GET', error.status);
+      return unauthorized({ message: error.message });
+    }
+    logger.error('Admin dashboard GET error', { error: (error as Error).message });
+    logger.endRequest(start, '/api/admin/dashboard', 'GET', 500);
+    return internalError();
   }
 }
 
-// PATCH api/admin/dashboard to approve or reject organization users
+// PATCH /api/admin/dashboard — approve or reject an organization
 export async function PATCH(req: NextRequest) {
-  const auth = req.headers.get('authorization');
-  if (!auth) return Response.json({ message: 'Unauthorized' }, { status: 401 });
-  
-  const token = auth.split(' ')[1];
+  const start = logger.startRequest('/api/admin/dashboard', 'PATCH');
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
-    if (payload.role !== 'admin') return Response.json({ message: 'Forbidden' }, { status: 403 });
+    const payload = verifyRole(req, 'admin');
 
-    const { userId, isApproved }: { userId: string; isApproved: boolean } = await req.json();
-    if (!userId || typeof isApproved !== 'boolean') {
-      return Response.json({ message: 'Invalid request data' }, { status: 400 });
+    const body = await req.json();
+    const parsed = patchSchema.safeParse(body);
+    if (!parsed.success) {
+      logger.endRequest(start, '/api/admin/dashboard', 'PATCH', 400);
+      return badRequest({ message: parsed.error.errors[0].message });
     }
 
+    const { userId, isApproved } = parsed.data;
     await dbConnect();
     const user = await User.findByIdAndUpdate(userId, { isApproved }, { new: true });
-    
-    if (!user) return Response.json({ message: 'User not found' }, { status: 404 });
-    
-    return Response.json({ message: 'User updated', user });
+    if (!user) {
+      logger.endRequest(start, '/api/admin/dashboard', 'PATCH', 404);
+      return notFound({ message: 'User not found' });
+    }
+
+    logger.info('Organization approval updated', {
+      adminId: payload.userId,
+      targetUserId: userId,
+      isApproved,
+    });
+    logger.endRequest(start, '/api/admin/dashboard', 'PATCH', 200);
+    return ok({ message: `Organization ${isApproved ? 'approved' : 'rejected'}`, data: user });
   } catch (error) {
-    return Response.json({ message: 'Invalid token', error }, { status: 401 });
+    if (error instanceof AuthError) {
+      logger.endRequest(start, '/api/admin/dashboard', 'PATCH', error.status);
+      return unauthorized({ message: error.message });
+    }
+    logger.error('Admin dashboard PATCH error', { error: (error as Error).message });
+    logger.endRequest(start, '/api/admin/dashboard', 'PATCH', 500);
+    return internalError();
   }
 }

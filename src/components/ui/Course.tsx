@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Award, Users, Calendar, BookOpen, Wallet } from 'lucide-react'
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useCounterProgram } from '@/components/counter/counter-data-access'
 import { useState } from 'react'
@@ -66,45 +65,51 @@ const Course = ({ course }: { course: PopulatedCourse }) => {
 
 
   return (
-    
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-surface-dim text-on-surface font-body-md overflow-x-hidden relative pt-20">
+      <div className="max-w-container-max mx-auto p-md md:p-lg space-y-lg">
         {/* Course Header */}
-        <div className="mb-8">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <BookOpen className="h-8 w-8" />
+        <div className="mb-xl">
+          <div className="glass-surface-2 rounded-2xl p-6 md:p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 blur-3xl rounded-full"></div>
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 z-10 relative">
+              <div className="w-16 h-16 bg-primary-container/20 rounded-full flex items-center justify-center border border-primary/30">
+                <span className="material-symbols-outlined text-primary text-3xl">book</span>
               </div>
               <div className="flex-1">
-                <h1 className="text-3xl font-bold mb-2">{course.courseName}</h1>
-                <p className="text-indigo-100 text-lg">{course.description}</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-on-surface">{course.courseName}</h1>
+                <p className="text-on-surface-variant text-sm mt-1">{course.description}</p>
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white/10 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Calendar className="h-5 w-5" />
-                  <span className="font-medium">Created</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <div className="flex items-center gap-2 mb-2 text-xs text-on-surface-variant">
+                  <span className="material-symbols-outlined text-sm">calendar_month</span>
+                  <span className="font-semibold uppercase tracking-wider font-label-caps">Created</span>
                 </div>
-                <p className="text-indigo-100">{new Date(course.createdAt).toLocaleDateString()}</p>
+                <p className="text-on-surface font-medium text-sm">
+                  {new Date(course.createdAt).toLocaleDateString()}
+                </p>
               </div>
               
-              <div className="bg-white/10 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Users className="h-5 w-5" />
-                  <span className="font-medium">Enrolled Learners</span>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <div className="flex items-center gap-2 mb-2 text-xs text-on-surface-variant">
+                  <span className="material-symbols-outlined text-sm">groups</span>
+                  <span className="font-semibold uppercase tracking-wider font-label-caps">Enrolled Learners</span>
                 </div>
-                <p className="text-indigo-100 text-2xl font-bold">{course.learners.length}</p>
+                <p className="text-on-surface text-xl font-bold">
+                  {course.learners.length}
+                </p>
               </div>
               
-              <div className="bg-white/10 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Wallet className="h-5 w-5" />
-                  <span className="font-medium">Wallet Status</span>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                <div className="flex items-center gap-2 mb-2 text-xs text-on-surface-variant">
+                  <span className="material-symbols-outlined text-sm">wallet</span>
+                  <span className="font-semibold uppercase tracking-wider font-label-caps">Wallet Status</span>
                 </div>
-                <p className="text-indigo-100">{publicKey ? 'Connected' : 'Not Connected'}</p>
+                <p className={`text-sm font-bold ${publicKey ? 'text-secondary' : 'text-amber-500'}`}>
+                  {publicKey ? 'Connected' : 'Not Connected'}
+                </p>
               </div>
             </div>
           </div>
@@ -113,16 +118,16 @@ const Course = ({ course }: { course: PopulatedCourse }) => {
         {/* Wallet Connection Notice */}
         {!publicKey && (
           <div className="mb-8">
-            <Card className="border-l-4 border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
+            <Card className="border border-amber-500/20 bg-amber-500/5 text-amber-200 rounded-xl">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
-                  <Wallet className="h-6 w-6 text-yellow-600" />
+                  <span className="material-symbols-outlined text-amber-500 text-3xl">warning</span>
                   <div>
-                    <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">
+                    <h3 className="font-bold text-sm uppercase tracking-wider font-label-caps">
                       Wallet Connection Required
                     </h3>
-                    <p className="text-yellow-700 dark:text-yellow-300 mt-1">
-                      Please connect your wallet to issue certificates to learners.
+                    <p className="text-xs text-amber-200/70 mt-1">
+                      Please connect your Solana wallet to securely sign transactions and issue credentials onto the blockchain.
                     </p>
                   </div>
                 </div>
@@ -133,24 +138,25 @@ const Course = ({ course }: { course: PopulatedCourse }) => {
 
         {/* Learners Section */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-xl font-bold text-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined">person</span>
             Enrolled Learners
           </h2>
 
           {Array.isArray(course.learners) && course.learners.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {course.learners.map((learner , index: number) => (
-                <Card key={index} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800">
+              {course.learners.map((learner, index: number) => (
+                <Card key={index} className="hover:scale-[1.02] transition-all duration-300 border border-white/10 shadow-lg bg-surface-container/70 backdrop-blur-md rounded-xl overflow-hidden flex flex-col group">
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-4">
-                        <Users className="h-6 w-6 text-white" />
+                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                        <span className="material-symbols-outlined text-primary text-xl">account_circle</span>
                       </div>
                     </div>
-                    <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
-                      { learner?.learnerName}
+                    <CardTitle className="text-lg font-bold text-on-surface leading-tight">
+                      {learner?.learnerName}
                     </CardTitle>
-                    <CardDescription className="text-gray-600 dark:text-gray-400">
+                    <CardDescription className="text-xs text-on-surface-variant">
                       {learner.username}
                     </CardDescription>
                   </CardHeader>
@@ -165,17 +171,17 @@ const Course = ({ course }: { course: PopulatedCourse }) => {
                           course.courseName
                         )}
                         disabled={issuingCertificates.has(learner._id.toString())}
-                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                        className="w-full h-11 bg-primary text-on-primary font-bold text-xs tracking-wider rounded-lg shadow-md shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
                       >
                         {issuingCertificates.has(learner._id.toString()) ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 justify-center">
                             <LoadingSpinner size="sm" />
-                            Issuing Certificate...
+                            <span>Issuing...</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2">
-                            <Award className="h-4 w-4" />
-                            Issue Certificate
+                          <div className="flex items-center gap-2 justify-center">
+                            <span className="material-symbols-outlined text-sm">workspace_premium</span>
+                            <span>Issue Certificate</span>
                           </div>
                         )}
                       </Button>
@@ -183,9 +189,9 @@ const Course = ({ course }: { course: PopulatedCourse }) => {
                       <Button 
                         disabled 
                         variant="outline" 
-                        className="w-full h-12 text-gray-500"
+                        className="w-full h-11 border-white/10 text-on-surface-variant/40 rounded-lg text-xs"
                       >
-                        <Wallet className="h-4 w-4 mr-2" />
+                        <span className="material-symbols-outlined text-sm mr-2">wallet</span>
                         Connect Wallet to Issue
                       </Button>
                     )}
@@ -194,14 +200,14 @@ const Course = ({ course }: { course: PopulatedCourse }) => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="h-12 w-12 text-gray-400" />
+            <div className="text-center py-16 glass-surface-1 rounded-xl">
+              <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
+                <span className="material-symbols-outlined text-on-surface-variant text-3xl">groups</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-on-surface mb-2">
                 No learners enrolled
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              <p className="text-xs text-on-surface-variant max-w-sm mx-auto leading-relaxed">
                 Add learners to this course from the dashboard to start issuing certificates.
               </p>
             </div>

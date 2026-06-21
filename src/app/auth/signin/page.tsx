@@ -1,19 +1,10 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { useActionState, useEffect, useState } from 'react'
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import { signIn, SignInState } from '@/app/lib/actions'
 import { useRouter, useSearchParams } from 'next/navigation'
 import GoogleSignInButton from '@/components/GoogleSignInButton'
-
 
 const initialState: SignInState = {
   message: '',
@@ -22,26 +13,23 @@ const initialState: SignInState = {
 }
 
 export default function SignInPage() {
-  const [userType, setUserType] = useState<'learner' | 'org'>('org');
-  const [showPassword, setShowPassword] = useState(false)
+  const [userType, setUserType] = useState<'learner' | 'org'>('org')
   const [formValues, setFormValues] = useState({
     username: '',
     password: '',
   })
   const [clientErrors, setClientErrors] = useState<Record<string, string[]>>({})
   const [state, formAction] = useActionState(signIn, initialState)
-  const router = useRouter();
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const error = searchParams.get('error');
+  const error = searchParams.get('error')
 
   useEffect(() => {
-    if(state?.status === 200) {
-      // Redirect to dashboard on successful sign-in
-      router.refresh();
+    if (state?.status === 200) {
+      router.refresh()
     }
-  }, [state, router]);
+  }, [state, router])
 
-  // Handle controlled input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev) => ({
       ...prev,
@@ -53,13 +41,12 @@ export default function SignInPage() {
     }))
   }
 
-  // Client-side validation
   const validate = () => {
     const errors: Record<string, string[]> = {}
 
     if (!formValues.username.trim()) {
       errors.username = ['Email address is required.']
-    } 
+    }
 
     if (!formValues.password) {
       errors.password = ['Password is required.']
@@ -69,189 +56,212 @@ export default function SignInPage() {
     return Object.keys(errors).length === 0
   }
 
-  // Form submit handler
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (!validate()) {
-      e.preventDefault();
+      e.preventDefault()
     }
   }
 
-  
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-2">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center mx-auto">
-            <span className="text-white font-bold text-lg">VC</span>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Welcome Back
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Sign in to your VerifyCertify account
-          </p>
+    <div className="min-h-screen bg-background text-on-surface font-body-md overflow-x-hidden relative flex flex-col justify-between">
+      {/* Header */}
+      <header className="fixed top-0 left-0 w-full z-50 px-md py-base flex justify-between items-center bg-transparent">
+        <div className="flex items-center space-x-xs cursor-pointer" onClick={() => router.push('/')}>
+          <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+          <h1 className="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">VerifyCertify</h1>
         </div>
+      </header>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur dark:bg-gray-800/80">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl font-semibold text-center">
-              Sign In
-            </CardTitle>
-            <CardDescription className="text-center">
-              Enter your credentials to access your dashboard
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form action={formAction} onSubmit={handleSubmit} className="space-y-6" noValidate>
-              {/* Email */}
-              <div className="space-y-2">
-                <label
-                  htmlFor="username"
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
-                >
-                  <Mail className="h-4 w-4" />
-                  Email Address
-                </label>
-                <Input
-                  id="username"
-                  name="username"
-                  type="email"
-                  value={formValues.username}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  className="h-12"
-                />
-                {clientErrors.username?.map((error) => (
-                  <p key={error} className="text-sm text-red-500 mt-1">{error}</p>
-                ))}
-                {state?.errors?.username?.map((error: string) => (
-                  <p key={error} className="text-sm text-red-600 mt-1">{error}</p>
-                ))}
+      <main className="flex h-screen w-full pt-16">
+        {/* Left Side: Illustration */}
+        <section className="hidden md:flex relative w-1/2 h-full bg-surface-container-lowest overflow-hidden items-center justify-center border-r border-white/5">
+          <div className="absolute -inset-20 neon-bloom animate-pulse-soft opacity-40"></div>
+          <div className="relative z-10 w-full max-w-lg p-lg space-y-md">
+            <div className="relative">
+              {/* Graphic Card 1 */}
+              <div className="glass-surface rounded-xl p-md transform -rotate-3 hover:rotate-0 transition-transform duration-700">
+                <div className="flex justify-between items-start mb-md">
+                  <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary">workspace_premium</span>
+                  </div>
+                  <span className="font-label-caps text-xs text-secondary px-3 py-1 bg-secondary/10 rounded-full font-semibold">SOLANA VERIFIED</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 w-3/4 bg-on-surface-variant/20 rounded"></div>
+                  <div className="h-4 w-1/2 bg-on-surface-variant/20 rounded"></div>
+                </div>
+                <div className="mt-8 flex justify-between items-center">
+                  <div className="text-[10px] font-mono text-on-surface-variant/40">HASH: 0x72a...9b4f</div>
+                  <div className="h-8 w-8 rounded bg-primary/10"></div>
+                </div>
               </div>
-
-              {/* Password */}
-              <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
-                >
-                  <Lock className="h-4 w-4" />
-                  Password
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formValues.password}
-                    onChange={handleChange}
-                    placeholder="Enter your password"
-                    className="h-12 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+              {/* Graphic Card 2 */}
+              <div className="absolute top-1/2 -right-8 glass-surface rounded-xl p-4 w-48 shadow-2xl transform rotate-6 translate-y-4 hover:translate-y-0 transition-transform duration-700 delay-100">
+                <div className="flex items-center space-x-2 mb-3">
+                  <span className="material-symbols-outlined text-tertiary text-sm">shield</span>
+                  <span className="font-label-caps text-[10px] text-tertiary font-semibold">ENCRYPTED</span>
                 </div>
-                {clientErrors.password?.map((error) => (
-                  <p key={error} className="text-sm text-red-500 mt-1">{error}</p>
-                ))}
-                {state?.errors?.password?.map((error: string) => (
-                  <p key={error} className="text-sm text-red-600 mt-1">{error}</p>
-                ))}
+                <div className="h-2 w-full bg-tertiary/10 rounded mb-2"></div>
+                <div className="h-2 w-2/3 bg-tertiary/10 rounded"></div>
               </div>
-
-              {/* General message */}
-              {state?.message && (
-                <div
-                  className={`mt-4 p-4 rounded-lg text-center text-sm ${
-                    state.status === 200 || state.status === 201
-                      ? 'bg-green-50 text-green-800 dark:bg-green-900/20 dark:text-green-200'
-                      : 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200'
-                  }`}
-                >
-                  {state.message}
-                </div>
-              )}
-              {error && (
-                <div className="mt-4 p-4 bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-200 rounded-lg text-center">
-                  {error === 'not_approved' ? 'Your account is not approved yet.' : 'An error occurred during sign-in.'}
-                  {error === 'oauth_error' && ' Please try again later.'}
-                </div>
-              )}
-
-              <div className="flex items-center gap-4 mb-4">
-              <span className="text-gray-700 dark:text-gray-300">User Type:</span>
-              <label className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  name="userType"
-                  value="learner"
-                  checked={userType === 'learner'}
-                  onChange={() => setUserType('learner')}
-                />
-                Learner
-              </label>
-              <label className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  name="userType"
-                  value="org"
-                  checked={userType === 'org'}
-                  onChange={() => setUserType('org')}
-                />
-                Organization
-              </label>
             </div>
-
-              
-              <button
-                type="submit"
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Sign In
-              </button>
-              {userType === 'learner' ? (
-                <p className="text-orange-700 mb-2">
-                  Learners can Sign In Through Credentils Only. Please contact your organization.
-                </p>
-              ) :
-              <GoogleSignInButton
-                callbackUrl="/dashboard" 
-
-                className="w-full h-12 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-              />
-            }
-            </form>
-
-            {/* Navigation to signup */}
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => router.push('/auth/signup')}
-                className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
-              >
-                Need an organization account?
-              </button>
-            </div>
-
-            {/* Informational message (can adjust or remove) */}
-            <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-              <p className="text-sm text-orange-800 dark:text-orange-200 text-center">
-                <strong>Note:</strong> Sign in to access organization features.
-                <br /><br />
-                <span className="font-semibold">If you don’t have an account, register your organization first.</span>
+            <div className="pt-8 text-left">
+              <h2 className="font-display-lg text-3xl lg:text-4xl text-on-surface leading-tight font-bold mb-4">Instant Access. Total Control.</h2>
+              <p className="font-body-lg text-body-lg text-on-surface-variant max-w-sm">
+                Access and share your verified credentials instantly. We handle the blockchain security in the background, so you can focus on your career.
               </p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </section>
+
+        {/* Right Side: Form */}
+        <section className="w-full md:w-1/2 h-full relative flex items-center justify-center p-md">
+          <div className="absolute top-1/4 right-0 w-64 h-64 bg-primary/5 blur-3xl rounded-full"></div>
+          <div className="absolute bottom-1/4 left-0 w-48 h-48 bg-secondary/5 blur-3xl rounded-full"></div>
+          
+          <div className="w-full max-w-md space-y-6 z-10">
+            <div className="text-center md:text-left">
+              <h3 className="font-headline-md text-2xl font-bold text-on-surface mb-1">Secure Access</h3>
+              <p className="font-body-md text-sm text-on-surface-variant">Sign in to manage your decentralized credentials.</p>
+            </div>
+
+            <div className="glass-surface rounded-xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+              {/* Identity Role Toggle */}
+              <div className="relative">
+                <label className="font-label-caps text-xs text-on-surface-variant mb-2 block font-semibold">IDENTITY ROLE</label>
+                <div className="flex p-1 bg-surface-container-highest rounded-lg border border-white/5">
+                  <button
+                    type="button"
+                    onClick={() => setUserType('learner')}
+                    className={`flex-1 py-2 px-4 rounded-md text-xs font-semibold tracking-wider transition-all duration-300 ${
+                      userType === 'learner'
+                        ? 'bg-primary-container/20 text-primary font-bold'
+                        : 'text-on-surface-variant hover:text-on-surface'
+                    }`}
+                  >
+                    LEARNER
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserType('org')}
+                    className={`flex-1 py-2 px-4 rounded-md text-xs font-semibold tracking-wider transition-all duration-300 ${
+                      userType === 'org'
+                        ? 'bg-primary-container/20 text-primary font-bold'
+                        : 'text-on-surface-variant hover:text-on-surface'
+                    }`}
+                  >
+                    ORGANIZATION
+                  </button>
+                </div>
+              </div>
+
+              {/* Form */}
+              <form action={formAction} onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <input type="hidden" name="userType" value={userType} />
+
+                {/* Email Address */}
+                <div className="space-y-1">
+                  <label className="font-label-caps text-xs text-on-surface-variant font-semibold" htmlFor="username">EMAIL ADDRESS</label>
+                  <div className="relative group">
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">alternate_email</span>
+                    <Input
+                      id="username"
+                      name="username"
+                      type="email"
+                      value={formValues.username}
+                      onChange={handleChange}
+                      placeholder="name@enterprise.com"
+                      className="w-full bg-surface-container-lowest border border-white/10 rounded-lg pl-10 pr-4 py-3 text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all h-12"
+                    />
+                  </div>
+                  {clientErrors.username?.map((error) => (
+                    <p key={error} className="text-xs text-red-500 mt-1">{error}</p>
+                  ))}
+                  {state?.errors?.username?.map((error: string) => (
+                    <p key={error} className="text-xs text-red-600 mt-1">{error}</p>
+                  ))}
+                </div>
+
+                {/* Password */}
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <label className="font-label-caps text-xs text-on-surface-variant font-semibold" htmlFor="password">PASSWORD</label>
+                  </div>
+                  <div className="relative group">
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-lg">lock</span>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      value={formValues.password}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      className="w-full bg-surface-container-lowest border border-white/10 rounded-lg pl-10 pr-4 py-3 text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all h-12"
+                    />
+                  </div>
+                  {clientErrors.password?.map((error) => (
+                    <p key={error} className="text-xs text-red-500 mt-1">{error}</p>
+                  ))}
+                  {state?.errors?.password?.map((error: string) => (
+                    <p key={error} className="text-xs text-red-600 mt-1">{error}</p>
+                  ))}
+                </div>
+
+                {/* Message errors */}
+                {state?.message && (
+                  <div className="mt-4 p-3 rounded-lg text-center text-xs bg-red-900/20 text-red-200 border border-red-500/20">
+                    {state.message}
+                  </div>
+                )}
+                {error && (
+                  <div className="mt-4 p-3 bg-red-900/20 text-red-200 rounded-lg text-center text-xs border border-red-500/20">
+                    {error === 'not_approved' ? 'Your account is not approved yet.' : 'An error occurred during sign-in.'}
+                  </div>
+                )}
+
+                <button type="submit" className="w-full h-12 bg-primary text-on-primary font-bold py-3 rounded-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all mt-4 flex items-center justify-center space-x-2">
+                  <span>Continue</span>
+                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+
+                {userType === 'learner' ? (
+                  <p className="text-xs text-amber-500 text-center mt-2 leading-relaxed">
+                    Learners can Sign In Through Credentials Only. Please contact your organization.
+                  </p>
+                ) : (
+                  <>
+                    <div className="relative py-2">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-white/10"></div>
+                      </div>
+                      <div className="relative flex justify-center text-[10px]">
+                        <span className="px-2 bg-[#1C1F2A] text-on-surface-variant uppercase font-label-caps tracking-widest">Or continue with</span>
+                      </div>
+                    </div>
+
+                    <GoogleSignInButton
+                      callbackUrl="/dashboard"
+                      className="w-full h-12 bg-surface-container-highest/50 hover:bg-surface-container-highest border border-white/5 text-on-surface py-3 rounded-lg flex items-center justify-center space-x-2 transition-all hover:scale-[1.02]"
+                    />
+                  </>
+                )}
+              </form>
+            </div>
+
+            <div className="text-center">
+              <p className="font-body-md text-xs text-on-surface-variant">
+                New to VerifyCertify?{' '}
+                <button
+                  onClick={() => router.push('/auth/signup')}
+                  className="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+                >
+                  Create an account
+                </button>
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   )
 }
