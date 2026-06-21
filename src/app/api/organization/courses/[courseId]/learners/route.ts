@@ -4,7 +4,6 @@ import { dbConnect } from '@/lib/mongodb';
 import Course from '@/models/Course';
 import User, { IUser } from '@/models/User';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
 import { z } from 'zod';
 import { AuthError, verifyRole } from '@/lib/auth';
 import {
