@@ -1,5 +1,5 @@
 'use client'
-import { useCounterProgram } from '../counter/counter-data-access';
+import { useCertificatesByLearner } from '../counter/counter-data-access';
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Award, Calendar, ExternalLink, Share2 } from 'lucide-react';
@@ -9,7 +9,6 @@ import Link from 'next/link';
 
 const Certificates = ({userId}: {userId: string}) => {
   console.log('userId', userId);
-  const { useCertificatesByLearner } = useCounterProgram()
   const certificates = useCertificatesByLearner(userId);
 
   const handleShareCertificate = (courseId: string, learnerId: string) => {
@@ -45,46 +44,51 @@ const Certificates = ({userId}: {userId: string}) => {
     ) : certificates.data?.length ? (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {certificates.data.map((cert, idx) => (
-          <Card key={idx} className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white dark:bg-gray-800">
-            <CardHeader className="pb-4">
-              <div className="flex items-start justify-between">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center mb-4">
-                  <Award className="h-6 w-6 text-white" />
-                </div>
+          <Card key={idx} className="hover:scale-[1.02] transition-all duration-300 border border-white/10 shadow-lg bg-surface-container/70 backdrop-blur-md rounded-xl overflow-hidden flex flex-col group">
+            {/* Crystalline Credential Cover Art */}
+            <div className="h-32 bg-surface-container-highest relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+              <div className="absolute bottom-3 left-3">
+                <span className="px-2 py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps uppercase font-bold tracking-widest">
+                  Verified
+                </span>
               </div>
-              <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+            </div>
+
+            <CardHeader className="pb-2 pt-4">
+              <CardTitle className="text-lg font-bold text-on-surface leading-tight">
                 {cert.account.courseName}
               </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-400">
+              <CardDescription className="text-xs text-on-surface-variant">
                 Certificate of Completion
               </CardDescription>
             </CardHeader>
             
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <CardContent className="space-y-4 flex-1 flex flex-col justify-between">
+              <div className="flex items-center gap-2 text-xs text-on-surface-variant">
                 <Calendar className="h-4 w-4" />
                 Issued on {new Date(cert.account.issueDate.toNumber() * 1000).toLocaleDateString()}
               </div>
               
-              <div className="flex gap-2">
-                  <Link 
+              <div className="flex gap-2 pt-4 border-t border-white/5">
+                <Link 
                   className='flex-1'
-                  href={`/public/course/${cert.account.courseId}/learner/${cert.account.learnerId}`}>
+                  href={`/public/course/${cert.account.courseId}/learner/${cert.account.learnerId}`}
+                >
                   <Button 
                     variant="outline" 
-                    className="w-full h-10 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    
+                    className="w-full h-10 border-white/10 hover:bg-white/10 text-on-surface text-xs font-semibold rounded-lg"
                   >
-                    <ExternalLink className="h-4 w-4 mr-2" />
+                    <ExternalLink className="h-3 w-3 mr-2" />
                     Verify
                   </Button>
                 </Link>
                 
                 <Button
                   onClick={() => handleShareCertificate(cert.account.courseId, cert.account.learnerId)}
-                  className="h-10 bg-blue-600 hover:bg-blue-700 text-white"
+                  className="h-10 bg-primary text-on-primary font-semibold text-xs px-4 rounded-lg hover:scale-105 active:scale-95 transition-all shadow-md shadow-primary/20"
                 >
-                  <Share2 className="h-4 w-4 mr-2" />
+                  <Share2 className="h-3 w-3 mr-2" />
                   Share
                 </Button>
               </div>

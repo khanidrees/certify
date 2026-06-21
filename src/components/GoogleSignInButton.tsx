@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface GoogleSignInButtonProps {
   callbackUrl?: string;
@@ -23,7 +24,7 @@ export default function GoogleSignInButton({
     <button
       onClick={handleGoogleSignIn}
       disabled={isLoading}
-      className={`flex items-center justify-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50 disabled:opacity-50 ${className}`}
+      className={twMerge('flex items-center justify-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50 disabled:opacity-50', className)}
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24">
         <path

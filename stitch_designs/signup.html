@@ -1,0 +1,338 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VerifyCertify | Create Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-primary-fixed": "#001a42",
+                "error-container": "#93000a",
+                "surface-tint": "#adc6ff",
+                "outline-variant": "#424754",
+                "error": "#ffb4ab",
+                "on-primary": "#002e6a",
+                "surface-container": "#1c1f2a",
+                "on-tertiary": "#003640",
+                "secondary-fixed-dim": "#4edea3",
+                "on-background": "#dfe2f1",
+                "primary": "#adc6ff",
+                "on-tertiary-fixed": "#001f26",
+                "tertiary-container": "#009eb9",
+                "secondary": "#4edea3",
+                "background": "#0f131d",
+                "on-secondary-fixed-variant": "#005236",
+                "on-error-container": "#ffdad6",
+                "inverse-primary": "#005ac2",
+                "surface-dim": "#0f131d",
+                "surface-variant": "#313540",
+                "surface-container-highest": "#313540",
+                "primary-fixed": "#d8e2ff",
+                "on-primary-fixed-variant": "#004395",
+                "inverse-surface": "#dfe2f1",
+                "surface-container-lowest": "#0a0e18",
+                "on-tertiary-container": "#002f38",
+                "on-primary-container": "#00285d",
+                "on-surface": "#dfe2f1",
+                "on-secondary-container": "#00311f",
+                "secondary-container": "#00a572",
+                "on-secondary": "#003824",
+                "inverse-on-surface": "#2c303b",
+                "tertiary": "#4cd7f6",
+                "surface-container-low": "#171b26",
+                "surface-bright": "#353944",
+                "surface": "#0f131d",
+                "secondary-fixed": "#6ffbbe",
+                "primary-fixed-dim": "#adc6ff",
+                "outline": "#8c909f",
+                "surface-container-high": "#262a35",
+                "tertiary-fixed-dim": "#4cd7f6",
+                "on-error": "#690005",
+                "tertiary-fixed": "#acedff",
+                "on-surface-variant": "#c2c6d6",
+                "on-secondary-fixed": "#002113",
+                "on-tertiary-fixed-variant": "#004e5c",
+                "primary-container": "#4d8eff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sidebar-width": "280px",
+                "lg": "40px",
+                "container-max": "1280px",
+                "base": "8px",
+                "xs": "4px",
+                "sm": "12px",
+                "md": "24px",
+                "xl": "64px"
+            },
+            "fontFamily": {
+                "display-lg-mobile": ["Outfit"],
+                "display-lg": ["Outfit"],
+                "title-sm": ["Outfit"],
+                "label-caps": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-md": ["Outfit"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "title-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0f131d;
+            overflow-x: hidden;
+        }
+
+        .grid-background {
+            background-image: 
+                linear-gradient(rgba(173, 198, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(173, 198, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .glass-surface {
+            background: rgba(28, 31, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .neon-glow-primary {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .cyber-orb {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0) 70%);
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: pulse 12s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1) translate(-5%, -5%); opacity: 0.4; }
+            100% { transform: scale(1.1) translate(5%, 5%); opacity: 0.6; }
+        }
+
+        .input-focus-glow:focus {
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+            border-color: #3b82f6;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #adc6ff 0%, #4cd7f6 50%, #4edea3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .nav-link-hover:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        .nav-link-hover:hover:after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-on-surface relative">
+<!-- Background FX -->
+<div class="fixed inset-0 grid-background -z-10"></div>
+<div class="cyber-orb top-[-20%] left-[-10%]"></div>
+<div class="cyber-orb bottom-[-20%] right-[-10%]" style="background: radial-gradient(circle, rgba(78, 222, 163, 0.05) 0%, rgba(78, 222, 163, 0) 70%);"></div>
+<!-- TopNavBar -->
+<nav class="sticky top-0 z-50 glass-surface border-b border-white/5 py-md">
+<div class="max-w-container-max mx-auto px-md flex items-center justify-between">
+<div class="flex items-center gap-sm cursor-pointer">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-on-surface">VerifyCertify</span>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="font-body-md text-on-surface-variant hover:text-on-surface relative nav-link-hover" href="#">Platform</a>
+<a class="font-body-md text-on-surface-variant hover:text-on-surface relative nav-link-hover" href="#">Security</a>
+<a class="font-body-md text-on-surface-variant hover:text-on-surface relative nav-link-hover" href="#">Solutions</a>
+<a class="font-body-md text-on-surface-variant hover:text-on-surface relative nav-link-hover" href="#">Contact</a>
+</div>
+<button class="bg-[#3b82f6] hover:bg-[#2563eb] text-white font-title-sm px-md py-sm rounded-lg transition-all duration-300 neon-glow-primary">
+                Get Started
+            </button>
+</div>
+</nav>
+<!-- Main Registration Section -->
+<main class="flex-grow flex items-center justify-center p-md my-xl">
+<div class="w-full max-w-[480px] z-10">
+<!-- Glassmorphic Card -->
+<div class="glass-surface rounded-xl p-lg space-y-md border border-white/10 shadow-2xl">
+<!-- Header Section -->
+<div class="text-center space-y-sm">
+<h1 class="font-display-lg text-display-lg-mobile md:text-[40px] md:leading-[48px] gradient-text font-bold">Create an Account</h1>
+<p class="font-body-lg text-on-surface-variant">Join the secure verification standard</p>
+</div>
+<!-- Form -->
+<form class="space-y-md pt-base" onsubmit="event.preventDefault()">
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant px-xs">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-3 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none input-focus-glow transition-all duration-300" placeholder="John Doe" type="text">
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant px-xs">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-3 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none input-focus-glow transition-all duration-300" placeholder="name@enterprise.com" type="email">
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant px-xs">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="w-full bg-surface-container-low border border-white/10 rounded-lg py-3 pl-12 pr-4 text-on-surface placeholder:text-outline/50 focus:ring-0 focus:outline-none input-focus-glow transition-all duration-300" placeholder="••••••••" type="password">
+</div>
+</div>
+<!-- Primary CTA -->
+<button class="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-title-sm py-4 rounded-lg neon-glow-primary hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-base shadow-lg shadow-blue-500/20">
+                        Sign Up
+                    </button>
+<!-- Divider -->
+<div class="flex items-center gap-sm py-xs">
+<div class="h-[1px] flex-1 bg-white/10"></div>
+<span class="font-label-caps text-label-caps text-outline">OR</span>
+<div class="h-[1px] flex-1 bg-white/10"></div>
+</div>
+<!-- Web3 Integration -->
+<button class="w-full bg-surface-container-low border border-white/10 hover:border-[#3b82f6]/50 text-on-surface font-title-sm py-3.5 rounded-lg flex items-center justify-center gap-sm transition-all duration-300 group hover:bg-surface-container">
+<div class="w-5 h-5 bg-contain bg-center bg-no-repeat grayscale group-hover:grayscale-0 transition-all duration-300" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBG6Seix0bQs9Fus-nu1AW1CP1MXdM-PUHtJE5Xu_0o0jK-GUp49b6XdmwvZDep1qolvGhj-XoyG-71nw-4waWXQnm8FBv86QWwqsDf_S2qxL2SRsNBQRs9eU2zy2jH3a7xCL6FNLOYvXFOyu68Ci0k7Qrutrwly9LWT5dgrDSGeo3xdRmAraRqMmfk2ElJ5ZMIV8mdObZ7g3kLcIAyolo7kowkX6YLVAgZRM3N3pfBpVHhjSX7DuFz2tpAVIHYgXuXd9nbtlQR7idr')"></div>
+<span class="text-on-surface-variant group-hover:text-on-surface transition-colors">Continue with Solana Wallet</span>
+</button>
+</form>
+<!-- Footer Links -->
+<div class="pt-sm text-center">
+<p class="font-body-md text-on-surface-variant">
+                        Already have an account? 
+                        <a class="text-secondary hover:text-secondary-fixed transition-colors font-semibold ml-1 underline underline-offset-4 decoration-secondary/30" href="#">Log In</a>
+</p>
+</div>
+</div>
+<!-- Security Disclaimer -->
+<div class="mt-md text-center">
+<div class="flex items-center justify-center gap-xs text-outline mb-xs opacity-60">
+<span class="material-symbols-outlined text-[16px]">shield</span>
+<span class="font-label-caps text-[10px] tracking-widest uppercase">Military Grade Encryption</span>
+</div>
+<p class="font-label-caps text-[10px] text-outline/60 leading-relaxed px-lg">
+                    By signing up, you agree to our <a class="hover:text-primary transition-colors underline" href="#">Terms of Service</a> and <a class="hover:text-primary transition-colors underline" href="#">Privacy Policy</a>. 
+                    <br>Credential integrity secured on Solana Mainnet.
+                </p>
+</div>
+</div>
+</main>
+<!-- Standard Footer -->
+<footer class="glass-surface border-t border-white/5 py-xl">
+<div class="max-w-container-max mx-auto px-md">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg mb-xl">
+<div class="col-span-2 md:col-span-1 space-y-md">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-on-primary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-headline-md text-[20px] font-bold text-on-surface">VerifyCertify</span>
+</div>
+<p class="text-on-surface-variant text-body-md leading-relaxed">
+                        The world's most trusted decentralized verification platform for secure, instant, and immutable digital credentials.
+                    </p>
+</div>
+<div class="space-y-md">
+<h4 class="font-title-sm text-on-surface">Platform</h4>
+<ul class="space-y-sm text-on-surface-variant text-body-md">
+<li><a class="hover:text-primary transition-colors" href="#">How it Works</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Integrations</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Case Studies</a></li>
+</ul>
+</div>
+<div class="space-y-md">
+<h4 class="font-title-sm text-on-surface">Company</h4>
+<ul class="space-y-sm text-on-surface-variant text-body-md">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Security</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div class="space-y-md">
+<h4 class="font-title-sm text-on-surface">Legal</h4>
+<ul class="space-y-sm text-on-surface-variant text-body-md">
+<li><a class="hover:text-primary transition-colors" href="#">Privacy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Compliances</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-lg border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-md">
+<p class="text-outline text-label-caps">© 2024 VerifyCertify Inc. All rights reserved.</p>
+<div class="flex items-center gap-md">
+<a class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[20px]">public</span>
+</a>
+<a class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                const icon = input.parentElement.querySelector('.material-symbols-outlined');
+                if (icon) {
+                    icon.style.color = '#3b82f6';
+                    icon.style.fontVariationSettings = "'FILL' 1";
+                }
+            });
+            input.addEventListener('blur', () => {
+                const icon = input.parentElement.querySelector('.material-symbols-outlined');
+                if (icon) {
+                    icon.style.color = '#8c909f';
+                    icon.style.fontVariationSettings = "'FILL' 0";
+                }
+            });
+        });
+    </script>
+</body></html>

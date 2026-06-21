@@ -1,33 +1,32 @@
-// get the user's token from localStorage and fetch the learner data
 import { NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/mongodb';
+import { AuthError, verifyToken } from '@/lib/auth';
+import { unauthorized, internalError } from '@/lib/apiResponse';
 import User from '@/models/User';
-import jwt from 'jsonwebtoken';
-const JWT_SECRET = process.env.JWT_SECRET as string;
+import { logger } from '@/lib/logger';
 
 export async function GET(request: Request) {
+  const start = logger.startRequest('/api/learner', 'GET');
   try {
-   
-    const token = request.headers.get('authorization')?.split(' ')[1];
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    const payload = jwt.verify(token, JWT_SECRET) as { userId: string; role: string };
-
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const payload = verifyToken(request);
 
     await dbConnect();
     const user = await User.findById(payload.userId).select('-password -__v');
 
     if (!user) {
+      logger.endRequest(start, '/api/learner', 'GET', 404);
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    logger.endRequest(start, '/api/learner', 'GET', 200);
     return NextResponse.json(user);
   } catch (error) {
-    console.error('Error fetching learner data:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    if (error instanceof AuthError) {
+      logger.endRequest(start, '/api/learner', 'GET', error.status);
+      return unauthorized({ message: error.message });
+    }
+    logger.error('Learner fetch error', { error: (error as Error).message });
+    logger.endRequest(start, '/api/learner', 'GET', 500);
+    return internalError();
   }
 }
