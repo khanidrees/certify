@@ -68,23 +68,23 @@ const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 const usersToSeed = [
   {
-    username: process.env.ADMIN_EMAIL || 'admin@stress.test',
-    password: process.env.ADMIN_PASSWORD || 'Admin@StressTest1',
+    username: process.env.ADMIN_EMAIL || 'admin@prod.test',
+    password: process.env.ADMIN_PASSWORD || 'Admin@ProdTest1',
     role: 'admin',
     isApproved: true,
   },
   {
-    username: process.env.ORG_EMAIL || 'org@stress.test',
-    password: process.env.ORG_PASSWORD || 'Org@StressTest1',
+    username: process.env.ORG_EMAIL || 'org@prod.test',
+    password: process.env.ORG_PASSWORD || 'Org@ProdTest1',
     role: 'organization',
-    organizationName: 'Stress Test Org',
+    organizationName: 'Prod Test Org',
     isApproved: true,
   },
   {
-    username: 'learner@stress.test',
-    password: 'Learner@StressTest1',
+    username: 'learner@prod.test',
+    password: 'Learner@ProdTest1',
     role: 'learner',
-    learnerName: 'Stress Test Learner',
+    learnerName: 'Prod Test Learner',
     isApproved: true,
   }
 ];

@@ -24,6 +24,22 @@ export default function SignInPage() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
 
+  const handlePrefill = (role: 'org' | 'learner') => {
+    setUserType(role)
+    if (role === 'org') {
+      setFormValues({
+        username: 'org@prod.test',
+        password: 'Org@ProdTest1',
+      })
+    } else {
+      setFormValues({
+        username: 'learner@prod.test',
+        password: 'Learner@ProdTest1',
+      })
+    }
+    setClientErrors({})
+  }
+
   useEffect(() => {
     if (state?.status === 200) {
       router.refresh()
@@ -246,6 +262,36 @@ export default function SignInPage() {
                   </>
                 )}
               </form>
+
+              {/* Demo Accounts */}
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/10"></div>
+                </div>
+                <div className="relative flex justify-center text-[10px]">
+                  <span className="px-2 bg-[#1C1F2A] text-on-surface-variant uppercase font-label-caps tracking-widest">Demo Accounts</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => handlePrefill('org')}
+                  className="flex flex-col items-center justify-center p-3 bg-surface-container-lowest/50 border border-white/10 rounded-lg hover:bg-primary/10 hover:border-primary/30 transition-all text-center group cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-primary text-xl mb-1 group-hover:scale-110 transition-transform">corporate_fare</span>
+                  <span className="font-semibold text-xs text-on-surface">Organization</span>
+                  <span className="text-[10px] text-on-surface-variant/50 font-mono mt-0.5">org@prod.test</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePrefill('learner')}
+                  className="flex flex-col items-center justify-center p-3 bg-surface-container-lowest/50 border border-white/10 rounded-lg hover:bg-secondary/10 hover:border-secondary/30 transition-all text-center group cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-secondary text-xl mb-1 group-hover:scale-110 transition-transform">school</span>
+                  <span className="font-semibold text-xs text-on-surface">Learner</span>
+                  <span className="text-[10px] text-on-surface-variant/50 font-mono mt-0.5">learner@prod.test</span>
+                </button>
+              </div>
             </div>
 
             <div className="text-center">
