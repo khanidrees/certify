@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const cookieName = 'token'; // Replace with your actual cookie name
   // Check if the authentication cookie exists
   // console.log(request.cookies);
@@ -19,27 +19,27 @@ export function middleware(request: NextRequest) {
   const userRole = request.cookies.get('role')?.value;
 
   // If the cookie exists and the user is on the login page, redirect to the home page.
-  if (request.nextUrl.pathname.includes('/auth') ) {
-    if(userRole === 'learner') {
+  if (request.nextUrl.pathname.includes('/auth')) {
+    if (userRole === 'learner') {
       return NextResponse.redirect(new URL('/learner-dashboard', request.url));
     }
-    if(userRole === 'admin') {
+    if (userRole === 'admin') {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
-    if(userRole === 'organization') {
+    if (userRole === 'organization') {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
     return NextResponse.redirect(new URL('/', request.url));
   }
   // console.log(userRole !== 'admin')
   // only role can access respective dashboards
-  if (request.nextUrl.pathname ==='/admin/dashboard' && userRole !== 'admin') {
+  if (request.nextUrl.pathname === '/admin/dashboard' && userRole !== 'admin') {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
-  if (request.nextUrl.pathname === '/dashboard'  && userRole !== 'organization') {
+  if (request.nextUrl.pathname === '/dashboard' && userRole !== 'organization') {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
-  if (request.nextUrl.pathname==='/learner-dashboard' && userRole !== 'learner') {
+  if (request.nextUrl.pathname === '/learner-dashboard' && userRole !== 'learner') {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
